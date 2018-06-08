@@ -114,7 +114,7 @@ class RailRoadService {
 
     }
 
-    func getServer(uuid: UUID) {
+    func getVPNServers(uuid: UUID) {
         let responseData = getHTMLRequest(urlTail: "/api/v1/vpns/servers/" + uuid.uuidString.lowercased())
 
         let json = try? JSONSerialization.jsonObject(with: responseData!) as? [String: Any]
@@ -277,4 +277,84 @@ class RailRoadService {
             }
         }
     }
+
+    func getVPNServersConditions(uuid: UUID) {
+        let responseData = getHTMLRequest(urlTail: "/api/v1/vpns/servers/conditions/" + uuid.uuidString.lowercased())
+
+        let json = try? JSONSerialization.jsonObject(with: responseData!) as? [String: Any]
+        if (json == nil) {
+            print("error json")
+            return
+        } else {
+            print(json)
+            let status = json!!["status"] as? String
+
+            let data = json!!["data"] as? [String: Any]
+
+            let version = data!["version"] as? Int
+            let condition_version = data!["condition_version"] as? Int
+            let bandwidth = data!["bandwidth"] as? Int
+            let load = data!["load"] as? Int
+            let status_id = data!["status_id"] as? Int
+            let string_uuid = data!["uuid"] as? String
+            let uuid = UUID.init(uuidString: string_uuid!)
+
+        }
+    }
+
+    func getVPNServersConditions() {
+        let responseData = getHTMLRequest(urlTail: "/api/v1/vpns/servers/conditions")
+
+        let json = try? JSONSerialization.jsonObject(with: responseData!) as? [String: Any]
+        if (json == nil) {
+            print("error json")
+            return
+        } else {
+            print(json)
+            let status = json!!["status"] as? String
+
+            let data = json!!["data"] as? [[String: Any]]
+            for elem in data! {
+                let version = elem["version"] as? Int
+                let condition_version = elem["condition_version"] as? Int
+                let bandwidth = elem["bandwidth"] as? Int
+                let load = elem["load"] as? Int
+                let status_id = elem["status_id"] as? Int
+                let string_uuid = elem["uuid"] as? String
+                let uuid = UUID.init(uuidString: string_uuid!)
+            }
+        }
+    }
+
+    func getVPNServerConfig(uuid: UUID) {
+        let responseData = getHTMLRequest(urlTail: "/api/v1/vpns/servers/" + uuid.uuidString.lowercased())
+
+        let json = try? JSONSerialization.jsonObject(with: responseData!) as? [String: Any]
+        if (json == nil) {
+            print("error json")
+            return
+        } else {
+            print(json)
+            let status = json!!["status"] as? String
+
+            let data = json!!["data"] as? [String: Any]
+            let string_uuid = data!["uuid"] as? String
+            let uuid = UUID.init(uuidString: string_uuid!)
+            let string_user_uuid = data!["user_uuid"] as? String
+            let user_uuid = UUID.init(uuidString: string_user_uuid!)
+            let string_server_uuid = data!["server_uuid"] as? String
+            let server_uuid = UUID.init(uuidString: string_server_uuid!)
+            //todo convert base64 config to smthing
+            let configuration = data!["configuration"] as? String
+            let version = data!["version"] as? Int
+
+        }
+    }
+
+    //todo (in development) func getRandomVPNServer
+
+    func test(){
+        let cache = NSCache<NSString, ?>.init()
+    }
+
 }
