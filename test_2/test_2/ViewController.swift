@@ -61,6 +61,12 @@ class ViewController: UIViewController {
     @objc func doSomething(_ sender: UIButton){
       let fff = RailRoadService.init()
         fff.getVPNServers()
+        fff.getMeta()
+        fff.getServer(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
+        fff.getVPNServers(status_id: 1)
+        fff.getVPNServers(type_id: 2)
+        fff.getVPNServersConditions(status_id: 1)
+        fff.getVPNServersConditions(type_id: 2)
       print("SHITSHISTHSI")
     }
 
