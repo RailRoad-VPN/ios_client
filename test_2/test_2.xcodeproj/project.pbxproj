@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2E156197C8E65FA7391A1B71 /* RailRoadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1564792D8227B58D5858BD /* RailRoadService.swift */; };
+		2E15671EE3C834202008F563 /* ServersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15634DB5B78C9019A9C4DA /* ServersListViewController.swift */; };
+		2E156A949AF032FA82E5AABA /* RailRoadNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156F45DEBD6C6AF0C08B9C /* RailRoadNavigationController.swift */; };
+		2E156EDC4350FF7C3B8E0E43 /* SettingsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156AC720A707122D3D6F07 /* SettingsListViewController.swift */; };
 		3E50EFBC209CD4CD007D128D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50EFBB209CD4CD007D128D /* AppDelegate.swift */; };
 		3E50EFBE209CD4CD007D128D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50EFBD209CD4CD007D128D /* ViewController.swift */; };
 		3E50EFC1209CD4CD007D128D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E50EFBF209CD4CD007D128D /* Main.storyboard */; };
@@ -37,7 +40,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E15634DB5B78C9019A9C4DA /* ServersListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServersListViewController.swift; sourceTree = "<group>"; };
 		2E1564792D8227B58D5858BD /* RailRoadService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RailRoadService.swift; sourceTree = "<group>"; };
+		2E156AC720A707122D3D6F07 /* SettingsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsListViewController.swift; sourceTree = "<group>"; };
+		2E156F45DEBD6C6AF0C08B9C /* RailRoadNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RailRoadNavigationController.swift; sourceTree = "<group>"; };
 		3E50EFB8209CD4CD007D128D /* test_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E50EFBB209CD4CD007D128D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3E50EFBD209CD4CD007D128D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +121,9 @@
 				3E50EFC4209CD4CD007D128D /* LaunchScreen.storyboard */,
 				3E50EFC7209CD4CE007D128D /* Info.plist */,
 				2E1564792D8227B58D5858BD /* RailRoadService.swift */,
+				2E15634DB5B78C9019A9C4DA /* ServersListViewController.swift */,
+				2E156F45DEBD6C6AF0C08B9C /* RailRoadNavigationController.swift */,
+				2E156AC720A707122D3D6F07 /* SettingsListViewController.swift */,
 			);
 			path = test_2;
 			sourceTree = "<group>";
@@ -293,6 +302,9 @@
 				3E50EFBE209CD4CD007D128D /* ViewController.swift in Sources */,
 				3E50EFBC209CD4CD007D128D /* AppDelegate.swift in Sources */,
 				2E156197C8E65FA7391A1B71 /* RailRoadService.swift in Sources */,
+				2E15671EE3C834202008F563 /* ServersListViewController.swift in Sources */,
+				2E156A949AF032FA82E5AABA /* RailRoadNavigationController.swift in Sources */,
+				2E156EDC4350FF7C3B8E0E43 /* SettingsListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

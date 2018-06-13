@@ -17,6 +17,8 @@ class ViewController: UIViewController {
 
     var rr: RailRoadService?
     var startVPN: UIButton?
+    var serverList: UIButton?
+    var settingsList: UIButton?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +46,7 @@ class ViewController: UIViewController {
         label_1.textColor = UIColor.white
         self.view.addSubview(label_1)
 
-
+// VPN button
         let screenSize = UIScreen.main.bounds
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
@@ -56,20 +58,54 @@ class ViewController: UIViewController {
 
         self.startVPN?.addTarget(self, action: #selector(ViewController.doSomething(_:)), for: .touchUpInside)
         self.view.addSubview(self.startVPN!)
+
+// servers_list
+        var frame3 = CGRect.init(x: screenWidth/4, y: screenHeight/4, width: 100, height: 100)
+        self.serverList = UIButton(frame: frame3)
+        self.serverList?.backgroundColor = UIColor.red
+        self.serverList?.setTitle("list", for: UIControlState.normal)
+
+        self.serverList?.addTarget(self, action: #selector(ViewController.goToServersList(_:)), for: .touchUpInside)
+        self.view.addSubview(self.serverList!)
+
+// settings
+        var frame4 = CGRect.init(x: screenWidth/2 + screenWidth/4, y: screenHeight/4, width: 100, height: 100)
+        self.settingsList = UIButton(frame: frame4)
+        self.settingsList?.backgroundColor = UIColor.green
+        self.settingsList?.setTitle("settings", for: UIControlState.normal)
+
+        self.settingsList?.addTarget(self, action: #selector(ViewController.goToSettingsList(_:)), for: .touchUpInside)
+        self.view.addSubview(self.settingsList!)
+
+//nav
+       self.navigationController?.navigationBar.isHidden = true
     }
 
     @objc func doSomething(_ sender: UIButton){
       let fff = RailRoadService.init()
-        fff.getVPNServers()
-        fff.getMeta()
-        fff.getVPNServers(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
-        fff.getVPNServers(status_id: 1)
-        fff.getVPNServers(type_id: 2)
-        fff.getVPNServersConditions(status_id: 1)
-        fff.getVPNServersConditions(type_id: 2)
-        fff.getVPNServersConditions(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
-        fff.getVPNServersConditions()
-      print("SHITSHISTHSI")
+      fff.getVPNServers()
+      fff.getMeta()
+      //fff.getVPNServers(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
+      //fff.getVPNServers(status_id: 1)
+      //fff.getVPNServers(type_id: 2)
+      //fff.getVPNServersConditions(status_id: 1)
+      //fff.getVPNServersConditions(type_id: 2)
+      //fff.getVPNServersConditions(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
+      //fff.getVPNServersConditions()
+        fff.getVPNServerConfig(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
+      print("vpn butt")
+    }
+
+    @objc func goToServersList (_ sender: UIButton){
+        print("serversList")
+        let listViewController = serversListViewController.init()
+        self.navigationController?.pushViewController(listViewController, animated: true)
+    }
+
+    @objc func goToSettingsList (_ sender: UIButton){
+        print("settingsList")
+        let listViewController = settingsListViewController.init()
+        self.navigationController?.pushViewController(listViewController, animated: true)
     }
 
 //    private var vpnSaveHandler: (Error?) -> Void { return
@@ -85,7 +121,7 @@ class ViewController: UIViewController {
 //            }
 //        }
 //        }
-//
+//80Pmkmjubgyfrvfgb
 //    }
 
 //    func establishVPN() {
