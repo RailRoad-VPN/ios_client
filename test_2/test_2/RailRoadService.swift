@@ -31,6 +31,7 @@ class RailRoadService {
             guard error == nil else {
                 print("error calling GET on " + urlTail)
                 print(error!)
+                semaphore.signal()
                 return
             }
             // make sure we got data
@@ -46,7 +47,10 @@ class RailRoadService {
             }
         })
         task.resume()
-        semaphore.wait()
+        if semaphore.wait(timeout: DispatchTime.now() + 10.0) == .timedOut {
+            print("TIMEDOUT")
+            //throw ErrorsEnum.timedOut
+        }
         return MyData
     }
 
@@ -348,15 +352,32 @@ class RailRoadService {
 //            let configuration = data!["configuration"] as? String
 //            let version = data!["version"] as? Int
 //
-           return data
+            return data
         }
     }
 
     //todo (in development) func getRandomVPNServer
 
-//    func test() {
-//        let cache = NSCache<NSString, NSDictionary>.init()
-//        cache.setObject(<#T##obj: NSDictionary##Foundation.NSDictionary#>, forKey: <#T##NSString##Foundation.NSString#>)
-//    }
+    func save(anyDict: Any, toFile: String) {
+        // Get path to documents directory
+        let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
 
+        // Path to save array data
+        let fileURL = dir!.appendingPathComponent(toFile)
+
+        // write to file 2
+        NSKeyedArchiver.archiveRootObject(anyDict, toFile: fileURL.path)
+
+        //reading2
+        let dict2 = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as? [[String: Any]]
+        print("-----------------------------------------------------")
+        print(dict2)
+        print("-----------------------------------------------------")
+    }
 }
+
+
+
+
+
+

@@ -35,16 +35,16 @@ class ViewController: UIViewController {
     }
 
     func loadInterface() {
-        let label_1 = UILabel.init(frame: CGRect.init(origin: CGPoint(x: 4, y: 4), size: CGSize(width: 1888, height: 55)))
-        label_1.text = "Dobrii Vecher Ya Dispetcher"
-        var frame = label_1.frame
-        frame.origin.y = 10
-        //pass the Y cordinate
-        frame.origin.x = 12
-        //pass the X cordinate
-        label_1.frame = frame
-        label_1.textColor = UIColor.white
-        self.view.addSubview(label_1)
+//        let label_1 = UILabel.init(frame: CGRect.init(origin: CGPoint(x: 4, y: 4), size: CGSize(width: 1888, height: 55)))
+//        label_1.text = "Dobrii Vecher Ya Dispetcher"
+//        var frame = label_1.frame
+//        frame.origin.y = 10
+//        //pass the Y cordinate
+//        frame.origin.x = 12
+//        //pass the X cordinate
+//        label_1.frame = frame
+//        label_1.textColor = UIColor.white
+//        self.view.addSubview(label_1)
 
 // VPN button
         let screenSize = UIScreen.main.bounds
@@ -83,7 +83,7 @@ class ViewController: UIViewController {
 
     @objc func doSomething(_ sender: UIButton){
       let fff = RailRoadService.init()
-      fff.getVPNServers()
+      let ggg = fff.getVPNServers()
       fff.getMeta()
       //fff.getVPNServers(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
       //fff.getVPNServers(status_id: 1)
@@ -92,8 +92,10 @@ class ViewController: UIViewController {
       //fff.getVPNServersConditions(type_id: 2)
       //fff.getVPNServersConditions(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
       //fff.getVPNServersConditions()
-        fff.getVPNServerConfig(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
+      fff.getVPNServerConfig(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
       print("vpn butt")
+
+      fff.save (anyDict: ggg!, toFile: "fff.out")
     }
 
     @objc func goToServersList (_ sender: UIButton){

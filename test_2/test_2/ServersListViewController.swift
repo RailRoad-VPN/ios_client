@@ -9,9 +9,9 @@ import UIKit
 class serversListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var tableView = UITableView.init()
-    let servers = RailRoadService.init().getVPNServers()
-
-    let animals = ["1", "2", "3"]
+    let servers = NSKeyedUnarchiver.unarchiveObject(withFile:
+    FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("vpnServers.dict2").path
+    ) as? [[String: Any]]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +19,8 @@ class serversListViewController: UIViewController, UITableViewDelegate, UITableV
         tableView = UITableView(frame: UIScreen.main.bounds, style: UITableViewStyle.plain)
         tableView.delegate      =   self
         tableView.dataSource    =   self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ServersListTableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.rowHeight = 50
         self.view.addSubview(self.tableView)
 
         self.navigationController?.navigationBar.isHidden = false
@@ -35,10 +36,23 @@ class serversListViewController: UIViewController, UITableViewDelegate, UITableV
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell:UITableViewCell=UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "cell")
+        let cell = ServersListTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "cell")
         //cell.textLabel!.text = animals [indexPath.row]
-        cell.textLabel!.text = servers![indexPath.row]["uuid"] as? String
-        cell.detailTextLabel!.text = indexPath.row as? String
+//debug
+        //cell.textLabel!.text = servers![indexPath.row]["uuid"] as? String
+        //cell.detailTextLabel!.text = indexPath.row as? String
+          cell.serverName.text = "Server #" + String(indexPath.row)
+        let serverRow = servers![indexPath.row] as? [String: Any]
+        let load = String(serverRow!["load"] as! Int)
+        let geo = serverRow!["geo"] as? [String: Any]
+        //todo country, city:
+        let country = String(geo!["country_code"] as! Int)
+        let city = String(geo!["city_id"] as! Int)
+        cell.locationAndLoad.text = country + ", " + city + " / Load: " + load + "%"
+
+//        let expl = UIImageView.init(frame: CGRect.init(x: 10, y: 10, width: 50, height: 50))
+//        expl.image = UIImage.init(named: "image936")
+//        cell.contentView.addSubview(expl)
         return cell;
     }
 
