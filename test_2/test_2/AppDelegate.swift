@@ -17,11 +17,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let concurrentQueue = DispatchQueue(label: "com.queue.Concurrent", attributes: .concurrent)
-        concurrentQueue.sync {
-            var fff = RailRoadService()
-            fff.save(anyDict: fff.getVPNServers(), toFile: "vpnServers.dict2")
-        }
+//        let concurrentQueue = DispatchQueue(label: "com.queue.Concurrent", attributes: .concurrent)
+//        concurrentQueue.sync {
+//            var fff = RailRoadService()
+//            fff.save(anyDict: fff.getVPNServers(), toFile: FilesEnum.vpnServers.rawValue)
+//        }
+
+
+
+        UIApplication.shared.statusBarStyle = .lightContent
+        UINavigationBar.appearance().barTintColor = UIColor.greyRailRoad
+        UINavigationBar.appearance().tintColor = UIColor.white
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+
         window = UIWindow(frame: UIScreen.main.bounds)
         let homeViewController = ViewController()
         let navigationController = RailRoadNavigationController.init(rootViewController: homeViewController)

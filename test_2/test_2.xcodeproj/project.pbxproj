@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2E156197C8E65FA7391A1B71 /* RailRoadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1564792D8227B58D5858BD /* RailRoadService.swift */; };
+		2E1562A91C389691716483D6 /* FilesEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15616CE249E82B75DCDF00 /* FilesEnum.swift */; };
+		2E1564F1BBDA3EBA454A4F66 /* CustomColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15627BE07D3ED0C54E5FD2 /* CustomColors.swift */; };
 		2E15661D8748095FADB9DE32 /* ErrorsEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1569BA0E5EE1BE12364461 /* ErrorsEnum.swift */; };
 		2E15671EE3C834202008F563 /* ServersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15634DB5B78C9019A9C4DA /* ServersListViewController.swift */; };
 		2E156A949AF032FA82E5AABA /* RailRoadNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156F45DEBD6C6AF0C08B9C /* RailRoadNavigationController.swift */; };
@@ -43,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E15616CE249E82B75DCDF00 /* FilesEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesEnum.swift; sourceTree = "<group>"; };
+		2E15627BE07D3ED0C54E5FD2 /* CustomColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomColors.swift; sourceTree = "<group>"; };
 		2E15634DB5B78C9019A9C4DA /* ServersListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServersListViewController.swift; sourceTree = "<group>"; };
 		2E1564792D8227B58D5858BD /* RailRoadService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RailRoadService.swift; sourceTree = "<group>"; };
 		2E1565DD29B810F747D882CC /* ServersListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServersListTableViewCell.swift; sourceTree = "<group>"; };
@@ -133,6 +137,8 @@
 				2E156AC720A707122D3D6F07 /* SettingsListViewController.swift */,
 				2E1569BA0E5EE1BE12364461 /* ErrorsEnum.swift */,
 				2E1565DD29B810F747D882CC /* ServersListTableViewCell.swift */,
+				2E15616CE249E82B75DCDF00 /* FilesEnum.swift */,
+				2E15627BE07D3ED0C54E5FD2 /* CustomColors.swift */,
 			);
 			path = test_2;
 			sourceTree = "<group>";
@@ -317,6 +323,8 @@
 				2E156EDC4350FF7C3B8E0E43 /* SettingsListViewController.swift in Sources */,
 				2E15661D8748095FADB9DE32 /* ErrorsEnum.swift in Sources */,
 				2E156E6599B070E3EED74498 /* ServersListTableViewCell.swift in Sources */,
+				2E1562A91C389691716483D6 /* FilesEnum.swift in Sources */,
+				2E1564F1BBDA3EBA454A4F66 /* CustomColors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

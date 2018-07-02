@@ -5,11 +5,21 @@
 
 import Foundation
 
+extension Notification.Name {
+    static let refreshTableView = Notification.Name("refreshTableView")
+}
+
 class RailRoadService {
     let rootUrl: String
+    let dir: URL?
+    var metaCached: [String: Any]?
+
 
     init() {
         self.rootUrl = "http://internal.novicorp.com:61885"
+        self.dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        self.metaCached = self.readDict(fromFile: FilesEnum.meta.rawValue)
+
     }
 
     func getHTMLRequest(urlTail: String) -> Data? {
@@ -46,6 +56,7 @@ class RailRoadService {
                 semaphore.signal()
             }
         })
+
         task.resume()
         if semaphore.wait(timeout: DispatchTime.now() + 10.0) == .timedOut {
             print("TIMEDOUT")
@@ -58,6 +69,9 @@ class RailRoadService {
 
         let responseData = getHTMLRequest(urlTail: "/api/v1/vpns/servers")
 
+        if responseData == nil {
+            return nil
+        }
 
         let json = try? JSONSerialization.jsonObject(with: responseData!) as? [String: Any]
         if (json == nil) {
@@ -96,23 +110,26 @@ class RailRoadService {
 
     }
 
-    func getMeta() {
+    func getMeta() -> [String: Any]? {
 
         let responseData = getHTMLRequest(urlTail: "/api/v1/vpns/servers/meta")
 
+        if responseData == nil {
+            return nil
+        }
 
         let json = try? JSONSerialization.jsonObject(with: responseData!) as? [String: Any]
         if (json == nil) {
             print("error json")
-            return
+            return nil
         } else {
             print(json)
-            let status = json!!["status"] as? String
+//            let status = json!!["status"] as? String
 
             let data = json!!["data"] as? [String: Any]
-
-            let version = data!["version"] as? Int
-            let condition_version = data!["condition_version"] as? Int
+            return data
+//            let version = data!["version"] as? Int
+//            let condition_version = data!["condition_version"] as? Int
 
         }
 
@@ -136,6 +153,7 @@ class RailRoadService {
             let bandwidth = data!["bandwidth"] as? Int
             let load = data!["load"] as? Int
             let status_id = data!["status_id"] as? Int
+
             let type_id = data!["type_id"] as? Int
             let string_uuid = data!["uuid"] as? String
             let uuid = UUID.init(uuidString: string_uuid!)
@@ -359,25 +377,69 @@ class RailRoadService {
     //todo (in development) func getRandomVPNServer
 
     func save(anyDict: Any, toFile: String) {
-        // Get path to documents directory
-        let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-
         // Path to save array data
-        let fileURL = dir!.appendingPathComponent(toFile)
+
+        let fileURL = self.dir!.appendingPathComponent(toFile)
 
         // write to file 2
         NSKeyedArchiver.archiveRootObject(anyDict, toFile: fileURL.path)
+    }
 
-        //reading2
-        let dict2 = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as? [[String: Any]]
+    func readDictArray(fromFile: String) -> [[String: Any]]? {
+        let fileURL = self.dir!.appendingPathComponent(fromFile)
+
+        let dict = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as? [[String: Any]]
         print("-----------------------------------------------------")
-        print(dict2)
+        return dict
         print("-----------------------------------------------------")
     }
+
+    func readDict(fromFile: String) -> [String: Any]? {
+        let fileURL = self.dir!.appendingPathComponent(fromFile)
+        //reading2
+        let dict = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as? [String: Any]
+        print("-----------------------------------------------------")
+        return dict
+        print("-----------------------------------------------------")
+    }
+
+    func updateRequestVPNServers(once: Bool = false) {
+        while true {
+            print("START OUR BACKGROUND WORK!!!")
+
+            if self.isMetaOld() == true {
+                self.save(anyDict: self.getVPNServers(), toFile: FilesEnum.vpnServers.rawValue)
+                NotificationCenter.default.post(name: .refreshTableView, object: nil)
+            }
+            if (once) {
+                return
+            }
+
+            let semaphore = DispatchSemaphore(value: 0)
+            semaphore.wait(timeout: DispatchTime.now() + 20.0)
+
+        }
+    }
+
+
+    func isMetaOld() -> Bool {
+        if self.metaCached == nil {
+            self.metaCached = self.getMeta()
+            return true
+        } else {
+            let metaCachedVersion = self.metaCached!["version"] as? Int
+            let metaCachedConditionVersion = self.metaCached!["contidion"] as? Int
+            let metaRemote = self.getMeta()
+            let metaRemoteVersion = metaRemote!["version"] as? Int
+            let metaRemoteConditionVersion = metaRemote!["ConditionVersion"] as? Int
+
+            if (metaCachedVersion != metaRemoteVersion) || (metaCachedConditionVersion != metaRemoteConditionVersion) {
+                self.save(anyDict: metaRemote, toFile: FilesEnum.meta.rawValue)
+                self.metaCached = metaRemote
+                return true
+            }
+            return false
+        }
+    }
+
 }
-
-
-
-
-
-

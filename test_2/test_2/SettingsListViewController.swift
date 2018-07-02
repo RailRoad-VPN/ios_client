@@ -6,7 +6,7 @@
 import UIKit
 
 
-class settingsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SettingsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var tableView = UITableView.init()
 

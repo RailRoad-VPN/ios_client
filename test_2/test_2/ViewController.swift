@@ -9,22 +9,55 @@
 import UIKit
 import NetworkExtension
 
-
 class ViewController: UIViewController {
 
-    var window: UIWindow?
     var vpnManager: NEVPNManager?
 
-    var rr: RailRoadService?
-    var startVPN: UIButton?
-    var serverList: UIButton?
-    var settingsList: UIButton?
+    var railRoadService: RailRoadService
+    var startVPN: UIButton
+    var serverList: UIButton
+    var settingsList: UIButton
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+
+        self.railRoadService = RailRoadService()
+        self.serverList = UIButton()
+        self.settingsList = UIButton()
+        self.startVPN = UIButton()
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        print("MainController INIT works!!!")
+//todo move everything here
+
+
+    }
+
+    required init?(coder: NSCoder) {
+        self.railRoadService = RailRoadService()
+        self.serverList = UIButton()
+        self.settingsList = UIButton()
+        self.startVPN = UIButton()
+        super.init(coder: coder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.blue
+//nav
+        //self.navigationController!.navigationBar.isHidden = false
 
-        self.loadInterface()
+        self.navigationController!.navigationBar.topItem!.title = "RailRoad VPN"
+
+
+        self.view.backgroundColor = UIColor.greyRailRoad
+
+        self.loadButtons()
+
+        if !userIsLoggedIn() {
+            self.loadAccountView()
+        }
+        print("INIT")
+        DispatchQueue.global(qos: .background).async {
+            self.railRoadService.updateRequestVPNServers()
+        }
         //self.establishVPN()
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -34,7 +67,7 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    func loadInterface() {
+    func loadButtons() {
 //        let label_1 = UILabel.init(frame: CGRect.init(origin: CGPoint(x: 4, y: 4), size: CGSize(width: 1888, height: 55)))
 //        label_1.text = "Dobrii Vecher Ya Dispetcher"
 //        var frame = label_1.frame
@@ -46,67 +79,77 @@ class ViewController: UIViewController {
 //        label_1.textColor = UIColor.white
 //        self.view.addSubview(label_1)
 
-// VPN button
         let screenSize = UIScreen.main.bounds
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
 
-        var frame2 = CGRect.init(x: screenWidth/2, y: screenHeight/2, width: 50, height: 50)
-        self.startVPN = UIButton(frame: frame2)
-        self.startVPN?.backgroundColor = UIColor.brown
-        self.startVPN?.setTitle("Tap me", for: UIControlState.normal)
-
-        self.startVPN?.addTarget(self, action: #selector(ViewController.doSomething(_:)), for: .touchUpInside)
-        self.view.addSubview(self.startVPN!)
+// VPN button
+//        var frame2 = CGRect.init(x: screenWidth / 2, y: screenHeight / 2, width: 50, height: 50)
+//        self.startVPN = UIButton(frame: frame2)
+//        self.startVPN?.backgroundColor = UIColor.brown
+//        self.startVPN?.setTitle("Tap me", for: UIControlState.normal)
+//
+//        self.startVPN?.addTarget(self, action: #selector(self.doSomething(_:)), for: .touchUpInside)
+//        self.view.addSubview(self.startVPN!)
 
 // servers_list
-        var frame3 = CGRect.init(x: screenWidth/4, y: screenHeight/4, width: 100, height: 100)
+        var frame3 = CGRect.init(x: screenWidth / 2 - 75, y: screenHeight - 80, width: 150, height: 50)
         self.serverList = UIButton(frame: frame3)
-        self.serverList?.backgroundColor = UIColor.red
-        self.serverList?.setTitle("list", for: UIControlState.normal)
+        self.serverList.layer.cornerRadius = 0.13 * self.serverList.bounds.size.width
 
-        self.serverList?.addTarget(self, action: #selector(ViewController.goToServersList(_:)), for: .touchUpInside)
-        self.view.addSubview(self.serverList!)
+        self.serverList.backgroundColor = UIColor.yellowRailRoad
+        self.serverList.setTitle("All servers", for: UIControlState.normal)
+
+        self.serverList.addTarget(self, action: #selector(self.goToServersList(_:)), for: .touchUpInside)
+        self.view.addSubview(self.serverList)
 
 // settings
-        var frame4 = CGRect.init(x: screenWidth/2 + screenWidth/4, y: screenHeight/4, width: 100, height: 100)
-        self.settingsList = UIButton(frame: frame4)
-        self.settingsList?.backgroundColor = UIColor.green
-        self.settingsList?.setTitle("settings", for: UIControlState.normal)
+//        var frame4 = CGRect.init(x: screenWidth / 2 + screenWidth / 4, y: screenHeight / 4, width: 100, height: 100)
+//        self.settingsList = UIButton(frame: frame4)
+//        self.settingsList?.backgroundColor = UIColor.green
+//        self.settingsList?.setTitle("settings", for: UIControlState.normal)
+//
+//        self.settingsList?.addTarget(self, action: #selector(self.goToSettingsList(_:)), for: .touchUpInside)
+//        self.view.addSubview(self.settingsList!)
 
-        self.settingsList?.addTarget(self, action: #selector(ViewController.goToSettingsList(_:)), for: .touchUpInside)
-        self.view.addSubview(self.settingsList!)
-
-//nav
-       self.navigationController?.navigationBar.isHidden = true
     }
 
-    @objc func doSomething(_ sender: UIButton){
-      let fff = RailRoadService.init()
-      let ggg = fff.getVPNServers()
-      fff.getMeta()
-      //fff.getVPNServers(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
-      //fff.getVPNServers(status_id: 1)
-      //fff.getVPNServers(type_id: 2)
-      //fff.getVPNServersConditions(status_id: 1)
-      //fff.getVPNServersConditions(type_id: 2)
-      //fff.getVPNServersConditions(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
-      //fff.getVPNServersConditions()
-      fff.getVPNServerConfig(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
-      print("vpn butt")
-
-      fff.save (anyDict: ggg!, toFile: "fff.out")
+    func loadAccountView() {
+        //todo
     }
 
-    @objc func goToServersList (_ sender: UIButton){
+    func userIsLoggedIn() -> Bool {
+        //todo
+        return false
+    }
+
+
+    @objc func doSomething(_ sender: UIButton) {
+        let fff = RailRoadService.init()
+        let ggg = fff.getVPNServers()
+        fff.getMeta()
+        //fff.getVPNServers(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
+        //fff.getVPNServers(status_id: 1)
+        //fff.getVPNServers(type_id: 2)
+        //fff.getVPNServersConditions(status_id: 1)
+        //fff.getVPNServersConditions(type_id: 2)
+        //fff.getVPNServersConditions(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
+        //fff.getVPNServersConditions()
+        fff.getVPNServerConfig(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
+        print("vpn butt")
+
+        fff.save(anyDict: ggg!, toFile: "fff.out")
+    }
+
+    @objc func goToServersList(_ sender: UIButton) {
         print("serversList")
-        let listViewController = serversListViewController.init()
+        let listViewController = ServersListViewController.init()
         self.navigationController?.pushViewController(listViewController, animated: true)
     }
 
-    @objc func goToSettingsList (_ sender: UIButton){
+    @objc func goToSettingsList(_ sender: UIButton) {
         print("settingsList")
-        let listViewController = settingsListViewController.init()
+        let listViewController = SettingsListViewController.init()
         self.navigationController?.pushViewController(listViewController, animated: true)
     }
 
