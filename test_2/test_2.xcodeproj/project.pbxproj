@@ -9,17 +9,19 @@
 /* Begin PBXBuildFile section */
 		2E156197C8E65FA7391A1B71 /* RailRoadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1564792D8227B58D5858BD /* RailRoadService.swift */; };
 		2E1562A91C389691716483D6 /* FilesEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15616CE249E82B75DCDF00 /* FilesEnum.swift */; };
+		2E156353C216D1B1D10F2970 /* PinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1569371639606F2B28E6CF /* PinViewController.swift */; };
 		2E1564F1BBDA3EBA454A4F66 /* CustomColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15627BE07D3ED0C54E5FD2 /* CustomColors.swift */; };
 		2E15661D8748095FADB9DE32 /* ErrorsEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1569BA0E5EE1BE12364461 /* ErrorsEnum.swift */; };
 		2E15671EE3C834202008F563 /* ServersListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15634DB5B78C9019A9C4DA /* ServersListViewController.swift */; };
 		2E156A949AF032FA82E5AABA /* RailRoadNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156F45DEBD6C6AF0C08B9C /* RailRoadNavigationController.swift */; };
+		2E156ACDE1124C15ADF872C1 /* PinTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156E5086F427A8A0395302 /* PinTextField.swift */; };
 		2E156E5C2DDA09442A5DC1EB /* README__ignoredByTemplate__ in Resources */ = {isa = PBXBuildFile; fileRef = 2E156F2CAA35AD632F743762 /* README__ignoredByTemplate__ */; };
 		2E156E6599B070E3EED74498 /* ServersListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1565DD29B810F747D882CC /* ServersListTableViewCell.swift */; };
 		2E156EDC4350FF7C3B8E0E43 /* SettingsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156AC720A707122D3D6F07 /* SettingsListViewController.swift */; };
 		3E50EFBC209CD4CD007D128D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50EFBB209CD4CD007D128D /* AppDelegate.swift */; };
 		3E50EFBE209CD4CD007D128D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50EFBD209CD4CD007D128D /* ViewController.swift */; };
 		3E50EFC1209CD4CD007D128D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E50EFBF209CD4CD007D128D /* Main.storyboard */; };
-		3E50EFC3209CD4CD007D128D /* FlagsAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E50EFC2209CD4CD007D128D /* FlagsAssets.xcassets */; };
+		3E50EFC3209CD4CD007D128D /* ImagesAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E50EFC2209CD4CD007D128D /* ImagesAssets.xcassets */; };
 		3E50EFC6209CD4CD007D128D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E50EFC4209CD4CD007D128D /* LaunchScreen.storyboard */; };
 		3E50EFD1209CD4CE007D128D /* test_2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50EFD0209CD4CE007D128D /* test_2Tests.swift */; };
 		3E50EFDC209CD4CE007D128D /* test_2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50EFDB209CD4CE007D128D /* test_2UITests.swift */; };
@@ -50,15 +52,17 @@
 		2E15634DB5B78C9019A9C4DA /* ServersListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServersListViewController.swift; sourceTree = "<group>"; };
 		2E1564792D8227B58D5858BD /* RailRoadService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RailRoadService.swift; sourceTree = "<group>"; };
 		2E1565DD29B810F747D882CC /* ServersListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServersListTableViewCell.swift; sourceTree = "<group>"; };
+		2E1569371639606F2B28E6CF /* PinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinViewController.swift; sourceTree = "<group>"; };
 		2E1569BA0E5EE1BE12364461 /* ErrorsEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorsEnum.swift; sourceTree = "<group>"; };
 		2E156AC720A707122D3D6F07 /* SettingsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsListViewController.swift; sourceTree = "<group>"; };
+		2E156E5086F427A8A0395302 /* PinTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinTextField.swift; sourceTree = "<group>"; };
 		2E156F2CAA35AD632F743762 /* README__ignoredByTemplate__ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README__ignoredByTemplate__; path = "___FILENAME___.xcassets/README__ignoredByTemplate__"; sourceTree = "<group>"; };
 		2E156F45DEBD6C6AF0C08B9C /* RailRoadNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RailRoadNavigationController.swift; sourceTree = "<group>"; };
 		3E50EFB8209CD4CD007D128D /* test_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E50EFBB209CD4CD007D128D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3E50EFBD209CD4CD007D128D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		3E50EFC0209CD4CD007D128D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		3E50EFC2209CD4CD007D128D /* FlagsAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FlagsAssets.xcassets; sourceTree = "<group>"; };
+		3E50EFC2209CD4CD007D128D /* ImagesAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ImagesAssets.xcassets; sourceTree = "<group>"; };
 		3E50EFC5209CD4CD007D128D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3E50EFC7209CD4CE007D128D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E50EFCC209CD4CE007D128D /* test_2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = test_2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,7 +132,7 @@
 				3E50EFBB209CD4CD007D128D /* AppDelegate.swift */,
 				3E50EFBD209CD4CD007D128D /* ViewController.swift */,
 				3E50EFBF209CD4CD007D128D /* Main.storyboard */,
-				3E50EFC2209CD4CD007D128D /* FlagsAssets.xcassets */,
+				3E50EFC2209CD4CD007D128D /* ImagesAssets.xcassets */,
 				3E50EFC4209CD4CD007D128D /* LaunchScreen.storyboard */,
 				3E50EFC7209CD4CE007D128D /* Info.plist */,
 				2E1564792D8227B58D5858BD /* RailRoadService.swift */,
@@ -139,6 +143,8 @@
 				2E1565DD29B810F747D882CC /* ServersListTableViewCell.swift */,
 				2E15616CE249E82B75DCDF00 /* FilesEnum.swift */,
 				2E15627BE07D3ED0C54E5FD2 /* CustomColors.swift */,
+				2E1569371639606F2B28E6CF /* PinViewController.swift */,
+				2E156E5086F427A8A0395302 /* PinTextField.swift */,
 			);
 			path = test_2;
 			sourceTree = "<group>";
@@ -288,7 +294,7 @@
 			files = (
 				3ED0316D209F47C900A23924 /* makecloud.ovpn in Resources */,
 				3E50EFC6209CD4CD007D128D /* LaunchScreen.storyboard in Resources */,
-				3E50EFC3209CD4CD007D128D /* FlagsAssets.xcassets in Resources */,
+				3E50EFC3209CD4CD007D128D /* ImagesAssets.xcassets in Resources */,
 				3E50EFC1209CD4CD007D128D /* Main.storyboard in Resources */,
 				2E156E5C2DDA09442A5DC1EB /* README__ignoredByTemplate__ in Resources */,
 			);
@@ -325,6 +331,8 @@
 				2E156E6599B070E3EED74498 /* ServersListTableViewCell.swift in Sources */,
 				2E1562A91C389691716483D6 /* FilesEnum.swift in Sources */,
 				2E1564F1BBDA3EBA454A4F66 /* CustomColors.swift in Sources */,
+				2E156353C216D1B1D10F2970 /* PinViewController.swift in Sources */,
+				2E156ACDE1124C15ADF872C1 /* PinTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

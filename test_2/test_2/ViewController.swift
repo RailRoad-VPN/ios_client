@@ -42,19 +42,26 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 //nav
-        //self.navigationController!.navigationBar.isHidden = false
-
         self.navigationController!.navigationBar.topItem!.title = "RailRoad VPN"
+        self.navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController!.navigationBar.isTranslucent = true
 
-
+//background picture
         self.view.backgroundColor = UIColor.greyRailRoad
 
-        self.loadButtons()
+        let imageView = UIImageView.init(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+        imageView.contentMode = UIViewContentMode.scaleToFill
+//        imageView.
+        imageView.image = UIImage.init(named: "homeBackground")!
 
-        if !userIsLoggedIn() {
-            self.loadAccountView()
-        }
-        print("INIT")
+        self.view.addSubview(imageView)
+        self.view.sendSubview(toBack: imageView)
+//        self.view.backgroundColor = UIColor.init(patternImage: )
+
+
+        loadButtons()
+
+//        print("INIT")
         DispatchQueue.global(qos: .background).async {
             self.railRoadService.updateRequestVPNServers()
         }
@@ -84,21 +91,28 @@ class ViewController: UIViewController {
         let screenHeight = screenSize.height
 
 // VPN button
-//        var frame2 = CGRect.init(x: screenWidth / 2, y: screenHeight / 2, width: 50, height: 50)
-//        self.startVPN = UIButton(frame: frame2)
-//        self.startVPN?.backgroundColor = UIColor.brown
-//        self.startVPN?.setTitle("Tap me", for: UIControlState.normal)
-//
-//        self.startVPN?.addTarget(self, action: #selector(self.doSomething(_:)), for: .touchUpInside)
-//        self.view.addSubview(self.startVPN!)
+//        var frame2 = CGRect.init(x: screenWidth / 2, y: screenHeight / 2, width: 100, height: 100)
+        var frame2 = CGRect.init(x: screenWidth / 2 - 50, y: screenHeight / 7, width: 100, height: 100)
+        self.startVPN = UIButton(frame: frame2)
+//        self.startVPN.setBackgroundImage(UIImage(named: "redSemaphore"), for: UIControlState.normal)
+        self.startVPN.setImage(UIImage(named: "redSemaphore"), for: UIControlState.normal)
+//        self.startVPN.setBackgroundImage(UIImage(named: "blackSemaphore"), for: UIControlState.highlighted)
+        self.startVPN.setImage(UIImage(named: "blackSemaphore"), for: UIControlState.highlighted)
+//        self.startVPN.setTitle("Tap me", for: UIControlState.normal)
+
+        self.startVPN.addTarget(self, action: #selector(self.doSomething(_:)), for: .touchUpInside)
+        self.view.addSubview(self.startVPN)
 
 // servers_list
         var frame3 = CGRect.init(x: screenWidth / 2 - 75, y: screenHeight - 80, width: 150, height: 50)
         self.serverList = UIButton(frame: frame3)
         self.serverList.layer.cornerRadius = 0.13 * self.serverList.bounds.size.width
 
-        self.serverList.backgroundColor = UIColor.yellowRailRoad
+        self.serverList.backgroundColor = UIColor.clear
         self.serverList.setTitle("All servers", for: UIControlState.normal)
+        self.serverList.setTitleColor(UIColor.white, for: UIControlState.normal)
+        self.serverList.layer.borderColor = UIColor.white.cgColor
+        self.serverList.layer.borderWidth = 3
 
         self.serverList.addTarget(self, action: #selector(self.goToServersList(_:)), for: .touchUpInside)
         self.view.addSubview(self.serverList)
@@ -114,35 +128,61 @@ class ViewController: UIViewController {
 
     }
 
-    func loadAccountView() {
-        //todo
-    }
-
-    func userIsLoggedIn() -> Bool {
-        //todo
-        return false
-    }
+//    func loadTestView() {
+//        //todo
+//
+//        let navSubViews = navigationController!.view.subviews
+//        let lastFrame = navSubViews.last!.frame
+//        let width = lastFrame.size.width
+//        let height = lastFrame.origin.y + lastFrame.size.height
+//
+//        let testFrame = CGRect.init(x: 0, y: height, width: width, height: 100)
+//        let testView = UIView(frame: testFrame)
+//        testView.backgroundColor = UIColor.purple
+//
+//        let testLabel = UILabel(frame: CGRect.init(x: 0, y: height, width: width, height: 50))
+//        testLabel.text = "UNDER CONSTRUCTION"
+//        testLabel.textColor = UIColor.green
+//
+//        self.view.addSubview(testView)
+//        testView.addSubview(testLabel)
+//
+//    }
 
 
     @objc func doSomething(_ sender: UIButton) {
-        let fff = RailRoadService.init()
-        let ggg = fff.getVPNServers()
-        fff.getMeta()
-        //fff.getVPNServers(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
-        //fff.getVPNServers(status_id: 1)
-        //fff.getVPNServers(type_id: 2)
-        //fff.getVPNServersConditions(status_id: 1)
-        //fff.getVPNServersConditions(type_id: 2)
-        //fff.getVPNServersConditions(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
-        //fff.getVPNServersConditions()
-        fff.getVPNServerConfig(uuid: UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a")!)
         print("vpn butt")
 
-        fff.save(anyDict: ggg!, toFile: "fff.out")
+        startVPN.isUserInteractionEnabled = false
+        startVPN.imageView!.animationImages = [UIImage(named: "blackSemaphore")!, UIImage(named: "yellowSemaphore")!]
+        startVPN.imageView!.animationDuration = 1
+        startVPN.imageView!.startAnimating()
+
+        if railRoadService.isVpnOn == false {
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.railRoadService.connectToVPN()
+                DispatchQueue.main.sync {
+                    self.startVPN.imageView!.stopAnimating()
+                    self.startVPN.setImage(UIImage(named: "greenSemaphore"), for: UIControlState.normal)
+                    self.startVPN.isUserInteractionEnabled = true
+
+                }
+            }
+
+        } else {
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.railRoadService.disconnectFromVPN()
+                DispatchQueue.main.sync {
+                    self.startVPN.imageView!.stopAnimating()
+                    self.startVPN.setImage(UIImage(named: "redSemaphore"), for: UIControlState.normal)
+                    self.startVPN.isUserInteractionEnabled = true
+                }
+            }
+        }
     }
 
     @objc func goToServersList(_ sender: UIButton) {
-        print("serversList")
+          print("serversList")
         let listViewController = ServersListViewController.init()
         self.navigationController?.pushViewController(listViewController, animated: true)
     }
