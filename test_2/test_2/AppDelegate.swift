@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window = UIWindow(frame: UIScreen.main.bounds)
 
-        if UserDefaults.standard.dictionary(forKey: FilesEnum.uesrInfo.rawValue) == nil {
+        if UserDefaults.standard.string(forKey: FilesEnum.deviceToken.rawValue) == nil {
             window!.rootViewController = PinViewController()
         } else {
             let navigationController = RailRoadNavigationController.init(rootViewController: ViewController())

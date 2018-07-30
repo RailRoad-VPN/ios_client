@@ -12,6 +12,7 @@ extension Notification.Name {
 class RailRoadService {
     let rootUrl: String
     let dir: URL?
+    let deviceToken: String?
     var isVpnOn: Bool
     var metaCached: [String: Any]?
 
@@ -19,6 +20,7 @@ class RailRoadService {
     init() {
         rootUrl = "http://internal.novicorp.com:61885"
         isVpnOn = false
+        deviceToken = UserDefaults.standard.string(forKey: FilesEnum.deviceToken.rawValue)
         dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         metaCached = readDict(fromFile: FilesEnum.meta.rawValue)
 
@@ -32,6 +34,9 @@ class RailRoadService {
         }
         var urlRequest = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringCacheData)
         urlRequest.httpMethod = "GET"
+        if deviceToken != nil {
+            urlRequest.addValue(deviceToken!, forHTTPHeaderField: "X-Device-Token")
+        }
         let sessionConf = URLSessionConfiguration.default
         let session = URLSession.init(configuration: sessionConf)
 
@@ -49,14 +54,19 @@ class RailRoadService {
             // make sure we got data
             guard let responseData = data else {
                 print("Error: did not receive data")
+                semaphore.signal()
                 return
             }
+//            if let httpStatus = response as? HTTPURLResponse/*, httpStatus.statusCode != 200*/ {           // check for http errors
+//                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+//                print("response = \(response)")
+//                HTTPResponse = httpStatus
+//                returnedData = data
+//            }
             // parse the result as JSON, since that's what the API provides
-            do {
-                print(urlRequest)
-                MyData = responseData
-                semaphore.signal()
-            }
+            print(urlRequest)
+            MyData = responseData
+            semaphore.signal()
         })
 
         task.resume()
@@ -67,36 +77,47 @@ class RailRoadService {
         return MyData
     }
 
-    func postRequest(urlTail: String, data: Data) {
+    func postRequest(urlTail: String, data: Data) -> (returnedData: Data?, HTTPResponse: HTTPURLResponse?) {
         let url = URL(string: rootUrl + urlTail)!
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if deviceToken != nil {
+            request.addValue(deviceToken!, forHTTPHeaderField: "X-Device-Token")
+        }
         request.httpMethod = "POST"
         request.httpBody = data
+
+        var returnedData: Data? = nil
+        var HTTPResponse: HTTPURLResponse? = nil
 
         let semaphore = DispatchSemaphore(value: 0)
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {                                                 // check for fundamental networking error
                 print("error=\(error)")
+
                 semaphore.signal()
                 return
             }
 
-            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? HTTPURLResponse/*, httpStatus.statusCode != 200*/ {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                HTTPResponse = httpStatus
+                returnedData = data
             }
 
             let responseString = String(data: data, encoding: .utf8)
             print("responseString = \(responseString)")
+//            response["X"]
             semaphore.signal()
         }
         task.resume()
-        if semaphore.wait(timeout: DispatchTime.now() + 10.0) == .timedOut {
+        if semaphore.wait(timeout: DispatchTime.now() + 20.0) == .timedOut {
             print("TIMEDOUT")
             //throw ErrorsEnum.timedOut
         }
+        return (returnedData, HTTPResponse)
     }
 
     func getVPNServers() -> [[String: Any]]? {
@@ -410,6 +431,13 @@ class RailRoadService {
 
     func getUser(pincode: String) -> [String: Any]? {
         let responseData = getRequest(urlTail: "/api/v1/users/pincode/" + pincode)
+
+        if responseData == nil {
+            print("error")
+            return nil
+        }
+
+
         let json = try? JSONSerialization.jsonObject(with: responseData!) as? [String: Any]
         if (json == nil) {
             print("error json")
@@ -435,11 +463,12 @@ class RailRoadService {
         }
     }
 
-    func postDevice(user_uuid: String) {
+    func postDevice(user_uuid: String) -> String? {
         let postJson: [String: Any] = ["user_uuid": user_uuid, "device_id": UUID().uuidString]
         let jsonData = try? JSONSerialization.data(withJSONObject: postJson)
-        postRequest(urlTail: "/api/v1/users/" + user_uuid + "/devices", data: jsonData!)
-//
+        let request = postRequest(urlTail: "/api/v1/users/" + user_uuid + "/devices", data: jsonData!)
+
+        return request.HTTPResponse?.allHeaderFields["X-Device-Token"] as? String
     }
 
     //todo (in development) func getRandomVPNServer
@@ -511,7 +540,7 @@ class RailRoadService {
     }
 
     func connectToVPN() {
-        getVPNServerConfig(uuid: (UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a"))!)
+//        getVPNServerConfig(uuid: (UUID.init(uuidString: "c872e7f0-76d6-4a4e-826e-c56a7c05958a"))!)
         DispatchSemaphore.init(value: 0).wait(timeout: .now() + 3)
         isVpnOn = true
         print("connecting...")

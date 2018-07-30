@@ -9,5 +9,5 @@ enum FilesEnum: String {
     case vpnServers = "vpnServers.dict2"
     case meta = "meta.dict2"
     case userUuid = "userUuid"
-    case uesrInfo = "userInfo"
+    case deviceToken = "deviceToken"
 }

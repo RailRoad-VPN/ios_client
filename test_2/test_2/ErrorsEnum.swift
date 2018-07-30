@@ -6,5 +6,6 @@
 import Foundation
 
 enum ErrorsEnum: Error {
+    case connectionProblem
     case gerRequestTimedOut
 }

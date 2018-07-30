@@ -15,6 +15,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
     var secondPinNum: PinTextField
     var thirdPinNum: PinTextField
     var fourthPinNum: PinTextField
+    var actionStatus = UILabel()
 
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -54,19 +55,21 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
 //prepare frames for views
         let wTFrameHeight = CGFloat(70)
         let wTFrameWidth = screenWidth
-        let wTFrameY = screenHeight / 7
+        let wTFrameY = screenHeight / 9
         let wCFrameHeight = CGFloat(40)
         let wCFrameWidth = screenWidth
-        let wCFrameY = wTFrameY + wTFrameHeight
-        let pinNumHeight = CGFloat(20) + screenWidth / 10
-        let pinNumWidth = CGFloat(20) + screenWidth / 10
+        let wCFrameY = wTFrameY + wTFrameHeight + wTFrameHeight / 4
+        let pinNumHeight = CGFloat(15) + screenWidth / 10
+        let pinNumWidth = CGFloat(15) + screenWidth / 10
         let pinNumMarginBetween = CGFloat(15)
-        let pinNumY = wCFrameY + wCFrameHeight + screenHeight / 15
+        let pinNumY = wCFrameY + wCFrameHeight + screenHeight / 30
         let pinNumLeftMargin = (screenWidth - (pinNumWidth + pinNumMarginBetween) * 4 + pinNumMarginBetween) / 2  //CGFloat(50)
 
         let wTFrame = CGRect.init(x: 0, y: wTFrameY, width: wTFrameWidth, height: wTFrameHeight)
         let wCFrame = CGRect.init(x: 0, y: wCFrameY, width: wCFrameWidth, height: wCFrameHeight)
         var pinNumFrame = CGRect.init(x: pinNumLeftMargin, y: pinNumY, width: pinNumWidth, height: pinNumHeight)
+
+        let actionStatusFrame = CGRect.init(x:0, y:pinNumY + pinNumHeight, width: wCFrameWidth, height: wCFrameHeight)
 
         welcomeTitle.frame = wTFrame
         welcomeTitle.numberOfLines = 1
@@ -91,7 +94,8 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
         welcomeComment.font = UIFont.systemFont(ofSize: 20)
         welcomeComment.frame = wCFrame
         welcomeComment.textAlignment = NSTextAlignment.center
-//        welcomeComment.textColor = UIColor.white
+        welcomeComment.textColor = UIColor.white
+        welcomeComment.backgroundColor = UIColor.greyRailRoad
 
         firstPinNum.frame = pinNumFrame
 
@@ -105,7 +109,15 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
         fourthPinNum.frame = pinNumFrame
 
         coverPinNums.frame = CGRect.init(x: 0, y: pinNumY, width: screenWidth, height: pinNumHeight)
-//        coverPinNums.backgroundColor = UIColor.blue
+//        coverPinNums.backgroundColor = UIColor.yellowRailRoad
+
+        actionStatus.text = "LOADING..."
+        actionStatus.textAlignment = .center
+        actionStatus.textColor = .green
+//        actionStatus.backgroundColor = UIColor.brown
+        actionStatus.frame = actionStatusFrame
+        actionStatus.isHidden = true
+
 
 
         view.addSubview(welcomeTitle)
@@ -115,6 +127,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
         view.addSubview(thirdPinNum)
         view.addSubview(fourthPinNum)
         view.addSubview(coverPinNums)
+        view.addSubview(actionStatus)
 
         firstPinNum.becomeFirstResponder()
     }
@@ -150,6 +163,8 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
                 secondPinNum.backgroundColor = UIColor.yellowRailRoad
                 thirdPinNum.backgroundColor = UIColor.yellowRailRoad
                 fourthPinNum.backgroundColor = UIColor.yellowRailRoad
+                actionStatus.isHidden = true
+                actionStatus.text = "LOADING..."
             default: print("no")
             }
         } else {
@@ -166,12 +181,19 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
                 fourthPinNum.text = string
                 fourthPinNum.becomeFirstResponder()
                 print("timeToCheckPin")
-                pinDidInsert()
+                actionStatus.isHidden = false
+                fourthPinNum.isUserInteractionEnabled = false
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.pinDidInsert()
+                }
             case fourthPinNum:
                 fourthPinNum.text = string
                 print("timeToCheckPin")
-                pinDidInsert()
-
+                actionStatus.isHidden = false
+                fourthPinNum.isUserInteractionEnabled = false
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.pinDidInsert()
+                }
 //                fourthPinNum.resignFirstResponder()
             default: print("no")
             }
@@ -183,31 +205,41 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
     func pinDidInsert() {
         let pincode = firstPinNum.text! + secondPinNum.text! + thirdPinNum.text! + fourthPinNum.text!
         if isPinCorrect(pincode: pincode) {
-            firstPinNum.backgroundColor = UIColor.green
-            secondPinNum.backgroundColor = UIColor.green
-            thirdPinNum.backgroundColor = UIColor.green
-            fourthPinNum.backgroundColor = UIColor.green
+            DispatchQueue.main.sync {
+                firstPinNum.backgroundColor = UIColor.green
+                secondPinNum.backgroundColor = UIColor.green
+                thirdPinNum.backgroundColor = UIColor.green
+                fourthPinNum.backgroundColor = UIColor.green
+                actionStatus.isHidden = true
 
-            if let userUuid = UserDefaults.standard.string(forKey: FilesEnum.userUuid.rawValue) {
-                RailRoadService().postDevice(user_uuid: userUuid)
-                //todo save device token - api under construction
-            } else {
-                print("ERROR: USER UUID IS EMPTY")
+                if let userUuid = UserDefaults.standard.string(forKey: FilesEnum.userUuid.rawValue),
+                   let deviceToken = RailRoadService().postDevice(user_uuid: userUuid) {
+                    UserDefaults.standard.set(deviceToken, forKey: FilesEnum.deviceToken.rawValue)
+
+                } else {
+                    print("ERROR: USER UUID IS EMPTY")
+                    return
+                }
+
+                let navigationController = RailRoadNavigationController.init(rootViewController: ViewController())
+                present(navigationController, animated: true)
             }
-
-            let navigationController = RailRoadNavigationController.init(rootViewController: ViewController())
-            self.present(navigationController, animated: true)
         } else {
-            firstPinNum.backgroundColor = UIColor.red
-            secondPinNum.backgroundColor = UIColor.red
-            thirdPinNum.backgroundColor = UIColor.red
-            fourthPinNum.backgroundColor = UIColor.red
+            DispatchQueue.main.sync {
+                firstPinNum.backgroundColor = UIColor.red
+                secondPinNum.backgroundColor = UIColor.red
+                thirdPinNum.backgroundColor = UIColor.red
+                fourthPinNum.backgroundColor = UIColor.red
+                fourthPinNum.isUserInteractionEnabled = true
+                actionStatus.text = "Pin is incorrect. Check your account"
+            }
         }
     }
 
+
     func isPinCorrect(pincode: String) -> Bool {
-        let service = RailRoadService()
-        let usrDict = service.getUser(pincode: pincode)
+        DispatchSemaphore.init(value: 0).wait(timeout: .now() + 1)
+        let usrDict = RailRoadService().getUser(pincode: pincode)
         if (usrDict?["enabled"] as? Int) == 1 {
             let uuid = usrDict?["uuid"] as? String
             UserDefaults.standard.set(uuid, forKey: FilesEnum.userUuid.rawValue)
