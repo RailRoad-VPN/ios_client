@@ -9,7 +9,6 @@
 import UIKit
 
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -21,17 +20,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.statusBarStyle = .lightContent
         UINavigationBar.appearance().barTintColor = UIColor.greyRailRoad
         UINavigationBar.appearance().tintColor = UIColor.white
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
 
         window = UIWindow(frame: UIScreen.main.bounds)
 
-        if UserDefaults.standard.string(forKey: FilesEnum.deviceToken.rawValue) == nil {
+        CacheMetaService.shared.backgroundUpdateCheckGlobalMeta(once: false)
+
+        let user = User()
+        if user.getUserDevice() == nil || user.getUserDevice()?.getToken() == nil {
             window!.rootViewController = PinViewController()
         } else {
-            let navigationController = RailRoadNavigationController.init(rootViewController: ViewController())
+            let navigationController = RailRoadNavigationController.init(rootViewController: TabViewController())
             window!.rootViewController = navigationController
         }
         window!.makeKeyAndVisible()
+
+
         // Override point for customization after application launch.
         return true
     }

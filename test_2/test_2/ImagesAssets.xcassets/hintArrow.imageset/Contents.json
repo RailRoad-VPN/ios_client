@@ -1,17 +1,16 @@
 {
   "images" : [
     {
-      "filename" : "blackSemaphore.png",
+      "filename" : "arrow_ye.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "blackSemaphore1.png",
+      "filename" : "arrow_ye1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "blackSemaphore2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

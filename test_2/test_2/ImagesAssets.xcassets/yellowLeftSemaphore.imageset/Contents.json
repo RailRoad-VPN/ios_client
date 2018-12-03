@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "yellowSemaphore.png",
+      "filename" : "semaphore_yellow_left.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "yellowSemaphore1.png",
+      "filename" : "semaphore_yellow_left1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

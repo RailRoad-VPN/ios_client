@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "semaphore_red.png",
+      "filename" : "semaphore_yellow_right.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "semaphore_red1.png",
+      "filename" : "semaphore_yellow_right1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "redSemaphore3.png",
+      "filename" : "blackSemaphore2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

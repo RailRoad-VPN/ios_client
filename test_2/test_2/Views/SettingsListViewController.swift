@@ -10,7 +10,7 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
 
     var tableView = UITableView.init()
 
-    let settingsItems = ["Account", "About", "Help"]
+    let settingsItems = ["Profile", "Support", "FAQ", "Log out"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,9 +21,11 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "settings_cell")
         self.view.addSubview(self.tableView)
 
-        self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "Settings"
+    }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.topItem!.title = "Settings"
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -51,7 +53,7 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        self.navigationController?.navigationBar.isHidden = true
+//        self.navigationController?.navigationBar.isHidden = true
 
     }
 

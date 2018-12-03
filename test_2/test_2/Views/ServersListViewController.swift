@@ -10,18 +10,17 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
 
     var tableView: UITableView
     var refreshControl: UIRefreshControl
-    var railRoadService: RailRoadService
-    var servers: [[String: Any]]?
+    var servers: [Server]?
+    let us = UserAPIService()
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 
         self.tableView = UITableView()
 
-        self.railRoadService = RailRoadService()
-        self.servers = self.railRoadService.readDictArray(fromFile: FilesEnum.vpnServers.rawValue)
+        self.servers = CacheMetaService.shared.readAny(fromFile: FilesEnum.vpnServers.rawValue) as? [Server]
         self.refreshControl = UIRefreshControl()
-
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+
         print("ServesrsList INIT works!!!")
 
 
@@ -30,8 +29,8 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
 
     required init?(coder: NSCoder) {
         self.tableView = UITableView()
-        self.railRoadService = RailRoadService()
         self.refreshControl = UIRefreshControl()
+        self.servers = CacheMetaService.shared.readAny(fromFile: FilesEnum.vpnServers.rawValue) as? [Server]
         super.init(coder: coder)
     }
 
@@ -50,7 +49,6 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
         self.tableView.insertSubview(self.refreshControl, aboveSubview: self.tableView)
 
         //self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "Servers"
 
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.refreshServerList(_:)), name: .refreshTableView, object: nil)
@@ -58,8 +56,17 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
 
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        self.navigationItem.title = ""
+        self.navigationController?.navigationBar.topItem!.title = "Servers"
+        if self.servers == nil {
+            self.loadServerList()
+        }
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return servers!.count
+        return (servers?.count) ?? 0
 
     }
 
@@ -70,15 +77,21 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
         //cell.textLabel!.text = servers![indexPath.row]["uuid"] as? String
         //cell.detailTextLabel!.text = indexPath.row as? String
 
-        let serverRow = servers![indexPath.row] as? [String: Any]
-        let load = String(serverRow!["load"] as! Int)
-        let geo = serverRow!["geo"] as? [String: Any]
-        let num = serverRow!["num"] as! Int
-        //todo country, city:
-        let country = String(geo!["country_code"] as! Int)
-        let city = String(geo!["city_id"] as! Int)
+
+        let serverRow = servers![indexPath.row] as Server
+
+        print("printing server rows")
+        print(serverRow.condition_version)
+        print(serverRow.country_code)
+        print(serverRow.uuid)
+        print(serverRow.bandwidth)
+        let load = String(serverRow.load ?? 0)
+        let num = String(serverRow.num ?? 0)
+        let country = String(serverRow.country_str_code ?? "hidden country")
+        let city = String(serverRow.city_name ?? "hidden city")
+
         cell.locationAndLoad.text = country + ", " + city + " / Load: " + load + "%"
-        cell.serverName.text = "Server #" + String(num)
+        cell.serverName.text = "Server #" + num
         cell.backgroundColor = UIColor.greyRailRoad
 //        let expl = UIImageView.init(frame: CGRect.init(x: 10, y: 10, width: 50, height: 50))
 //        expl.image = UIImage.init(named: "image936")
@@ -87,22 +100,33 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let uuid = servers![indexPath.row]["uuid"] as? String
-        let config = RailRoadService.init().getVPNServerConfig(uuid: UUID.init(uuidString: uuid!)!)
-        print(config)
+        let uuid = servers![indexPath.row].uuid
+        print(uuid)
 
     }
 
     @objc func refreshServerList(_ sender: Any) {
-        print("NOTIFICATION WORKS!!!!!!!!")
-        var t = 0
+        print("notification refreshServerList enter")
+        loadServerList()
+        print("notification refreshServerList exit")
+
+    }
+
+    func loadServerList() {
+        print("loadServerList() enter")
         DispatchQueue.global(qos: .background).async {
-            self.railRoadService.updateRequestVPNServers(once: true)
-            self.servers = self.railRoadService.readDictArray(fromFile: FilesEnum.vpnServers.rawValue)
+
+            self.servers = CacheMetaService.shared.readAny(fromFile: FilesEnum.vpnServers.rawValue) as? [Server]
+
+            if self.servers == nil {
+                print("!!!!!!!!!!servers are null!!!!!!!!!!!")
+                CacheMetaService.shared.backgroundUpdateCheckGlobalMeta(once: true)
+            }
 
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
+                print("loadServerList() exit")
 
             }
         }

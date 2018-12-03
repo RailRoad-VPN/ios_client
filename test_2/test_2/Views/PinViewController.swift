@@ -9,6 +9,8 @@ import UIKit
 
 class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
+    let userAPIService: UserAPIService
+
     let welcomeTitle = UILabel()
     let welcomeComment = UITextView()
     var firstPinNum: PinTextField
@@ -19,6 +21,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
 
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        userAPIService = UserAPIService()
 
         firstPinNum = PinTextField()
         secondPinNum = PinTextField()
@@ -29,6 +32,8 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
     }
 
     required init?(coder: NSCoder) {
+        userAPIService = UserAPIService()
+
         firstPinNum = PinTextField()
         secondPinNum = PinTextField()
         thirdPinNum = PinTextField()
@@ -69,7 +74,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
         let wCFrame = CGRect.init(x: 0, y: wCFrameY, width: wCFrameWidth, height: wCFrameHeight)
         var pinNumFrame = CGRect.init(x: pinNumLeftMargin, y: pinNumY, width: pinNumWidth, height: pinNumHeight)
 
-        let actionStatusFrame = CGRect.init(x:0, y:pinNumY + pinNumHeight, width: wCFrameWidth, height: wCFrameHeight)
+        let actionStatusFrame = CGRect.init(x: 0, y: pinNumY + pinNumHeight, width: wCFrameWidth, height: wCFrameHeight)
 
         welcomeTitle.frame = wTFrame
         welcomeTitle.numberOfLines = 1
@@ -117,7 +122,6 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
 //        actionStatus.backgroundColor = UIColor.brown
         actionStatus.frame = actionStatusFrame
         actionStatus.isHidden = true
-
 
 
         view.addSubview(welcomeTitle)
@@ -183,17 +187,13 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
                 print("timeToCheckPin")
                 actionStatus.isHidden = false
                 fourthPinNum.isUserInteractionEnabled = false
-                DispatchQueue.global(qos: .userInitiated).async {
-                    self.pinDidInsert()
-                }
+                self.pinDidInsert()
             case fourthPinNum:
                 fourthPinNum.text = string
                 print("timeToCheckPin")
                 actionStatus.isHidden = false
                 fourthPinNum.isUserInteractionEnabled = false
-                DispatchQueue.global(qos: .userInitiated).async {
-                    self.pinDidInsert()
-                }
+                self.pinDidInsert()
 //                fourthPinNum.resignFirstResponder()
             default: print("no")
             }
@@ -204,48 +204,75 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
 
     func pinDidInsert() {
         let pincode = firstPinNum.text! + secondPinNum.text! + thirdPinNum.text! + fourthPinNum.text!
-        if isPinCorrect(pincode: pincode) {
-            DispatchQueue.main.sync {
-                firstPinNum.backgroundColor = UIColor.green
-                secondPinNum.backgroundColor = UIColor.green
-                thirdPinNum.backgroundColor = UIColor.green
-                fourthPinNum.backgroundColor = UIColor.green
-                actionStatus.isHidden = true
+        var toProceed = false
+        var errorMessage: String?
 
-                if let userUuid = UserDefaults.standard.string(forKey: FilesEnum.userUuid.rawValue),
-                   let deviceToken = RailRoadService().postDevice(user_uuid: userUuid) {
-                    UserDefaults.standard.set(deviceToken, forKey: FilesEnum.deviceToken.rawValue)
+        let group = DispatchGroup()
+        group.enter()
 
+        DispatchQueue.main.async {
+            do {
+                toProceed = try self.isPinCorrect(pincode: pincode)
+                if (toProceed) {
+                    let userDevice = try self.userAPIService.createUserDevice()
+                    CacheMetaService.shared.save(any: userDevice, toFile: FilesEnum.userDevice.rawValue)
                 } else {
-                    print("ERROR: USER UUID IS EMPTY")
-                    return
+                    errorMessage = "You entered wrong pin"
                 }
-
-                let navigationController = RailRoadNavigationController.init(rootViewController: ViewController())
-                present(navigationController, animated: true)
+            } catch ErrorsEnum.userAPIServiceSystemError {
+                toProceed = false
+                errorMessage = "userAPIServiceSystemError"
+            } catch ErrorsEnum.userAPIServiceApplicationError {
+                toProceed = false
+                errorMessage = "userAPIServiceApplicationError"
+            } catch ErrorsEnum.userAPIServiceConnectionProblem {
+                toProceed = false
+                errorMessage = "userAPIServiceConnectionProblem"
+            } catch {
+                toProceed = false
+                errorMessage = "userAPIServiceApplicationError"
             }
-        } else {
-            DispatchQueue.main.sync {
-                firstPinNum.backgroundColor = UIColor.red
-                secondPinNum.backgroundColor = UIColor.red
-                thirdPinNum.backgroundColor = UIColor.red
-                fourthPinNum.backgroundColor = UIColor.red
-                fourthPinNum.isUserInteractionEnabled = true
-                actionStatus.text = "Pin is incorrect. Check your account"
+
+            group.leave()
+        }
+
+        group.notify(queue: .main) {
+            if toProceed {
+                self.firstPinNum.backgroundColor = UIColor.green
+                self.secondPinNum.backgroundColor = UIColor.green
+                self.thirdPinNum.backgroundColor = UIColor.green
+                self.fourthPinNum.backgroundColor = UIColor.green
+                self.actionStatus.isHidden = true
+
+                let navigationController = RailRoadNavigationController.init(rootViewController: TabViewController())
+                self.present(navigationController, animated: true)
+            } else {
+                self.firstPinNum.backgroundColor = UIColor.red
+                self.secondPinNum.backgroundColor = UIColor.red
+                self.thirdPinNum.backgroundColor = UIColor.red
+                self.fourthPinNum.backgroundColor = UIColor.red
+                self.fourthPinNum.isUserInteractionEnabled = true
+                self.actionStatus.text = errorMessage
             }
         }
     }
 
+    func isPinCorrect(pincode: String) throws -> Bool {
+        print("isPinCorrect with pin: " + pincode)
 
-    func isPinCorrect(pincode: String) -> Bool {
-        DispatchSemaphore.init(value: 0).wait(timeout: .now() + 1)
-        let usrDict = RailRoadService().getUser(pincode: pincode)
-        if (usrDict?["enabled"] as? Int) == 1 {
-            let uuid = usrDict?["uuid"] as? String
-            UserDefaults.standard.set(uuid, forKey: FilesEnum.userUuid.rawValue)
+        do {
+            let user = try userAPIService.receiveUser(pincode: pincode)
+            CacheMetaService.shared.save(any: user, toFile: FilesEnum.user.rawValue)
+            print(user.getUuid)
             return true
+        } catch ErrorsEnum.userAPIServiceWrongPin {
+            return false
+        } catch ErrorsEnum.userAPIServiceSystemError {
+            throw ErrorsEnum.userAPIServiceSystemError
+        } catch ErrorsEnum.userAPIServiceConnectionProblem {
+            throw ErrorsEnum.userAPIServiceConnectionProblem
+        } catch {
+            throw ErrorsEnum.userAPIServiceApplicationError
         }
-        return false
     }
-
 }
