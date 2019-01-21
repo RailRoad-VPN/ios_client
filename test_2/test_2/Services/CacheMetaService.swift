@@ -18,8 +18,6 @@ class CacheMetaService: RESTService {
     var generalMeta: Meta?
 
 
-
-
 // TODO mess with link here
     let url = GlobalSettings.getServiceURL(serviceName: "vpns/servers/meta")
 
@@ -29,7 +27,7 @@ class CacheMetaService: RESTService {
         let dir = fileManager.urls(for: .applicationDirectory, in: .userDomainMask).first!
         super.init()
         self.generalMeta = readMeta(fromFile: FilesEnum.meta.rawValue)
-        var isDir : ObjCBool = false
+        var isDir: ObjCBool = false
         if !(fileManager.fileExists(atPath: dir.path, isDirectory: &isDir)) {
             do {
                 try fileManager.createDirectory(atPath: dir.path, withIntermediateDirectories: false)
@@ -38,7 +36,6 @@ class CacheMetaService: RESTService {
             }
         }
     }
-
 
 
     func save(any: Any, toFile: String) {
@@ -53,8 +50,9 @@ class CacheMetaService: RESTService {
         let data = NSKeyedArchiver.archivedData(withRootObject: any)
 
         if !(fileManager.fileExists(atPath: path.path)) {
-            if !(fileManager.createFile(atPath: path.path, contents: data)){
-                print("FILE WASNT CREATED")
+            if !(fileManager.createFile(atPath: path.path, contents: data)) {
+                print("FILE WASNT CREATED. I'm crashing")
+                exit(100)
             }
         } else {
             try! data.write(to: path, options: .atomic)
@@ -196,5 +194,20 @@ class CacheMetaService: RESTService {
             print("throw metaCacheServiceSystemError")
             throw ErrorsEnum.metaCacheServiceSystemError
         }
+    }
+
+    func clearSettings() throws {
+        print("CacheMetaService delete everything to hell enter")
+        // Path to save array data
+        do {
+            let directoryContents = try fileManager.contentsOfDirectory(at: self.dir, includingPropertiesForKeys: .none)
+            for file in directoryContents {
+                try fileManager.removeItem(at: file)
+            }
+        } catch {
+            throw ErrorsEnum.metaCacheSystemError
+        }
+
+        print("CacheMetaService delete everything to hell exit")
     }
 }

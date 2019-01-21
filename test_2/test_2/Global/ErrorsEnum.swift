@@ -22,6 +22,7 @@ enum ErrorsEnum: Error {
 
     case metaCacheServiceConnectionProblem
     case metaCacheServiceSystemError
+    case metaCacheSystemError
 
     case utilityServiceUnableToDecodeBase64
 

@@ -10,19 +10,29 @@ class TabViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
-
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.blue], for: .selected)
 
         let mainViewController = MainViewController()
-        mainViewController.tabBarItem = UITabBarItem(title: "VPN", image: .none, tag: 0)
+        let vpnTab = UIImage(named: "VPNTab")!
+        mainViewController.tabBarItem = UITabBarItem(title: "VPN", image: vpnTab.withRenderingMode(.alwaysOriginal),
+                selectedImage: vpnTab
+        )
 
         let serversListViewController = ServersListViewController()
-        serversListViewController.tabBarItem = UITabBarItem(title: "Servers", image: .none, tag: 1)
+        let serverListTab = UIImage(named: "serversListTab")!
+        serversListViewController.tabBarItem = UITabBarItem(title: "Servers", image: serverListTab.withRenderingMode(.alwaysOriginal),
+                selectedImage: serverListTab
+        )
 
-        let settingsViewContoller = SettingsListViewController()
-        settingsViewContoller.tabBarItem = UITabBarItem(title: "Settings", image: .none, tag: 2)
-        let tabBarList = [mainViewController, serversListViewController, settingsViewContoller]
+        let settingsViewController = SettingsListViewController()
+        let settingsTab = UIImage(named: "settingsTab")!
+        settingsViewController.tabBarItem = UITabBarItem(title: "Settings", image: settingsTab.withRenderingMode(.alwaysOriginal),
+                selectedImage: settingsTab
+        )
+        let tabBarList = [mainViewController, serversListViewController, settingsViewController]
 
+        self.tabBar.barTintColor = UIColor.black
         self.viewControllers = tabBarList
         print("tabbar controller wtf?")
     }

@@ -72,7 +72,7 @@ class RESTService: RESTServiceI {
 
         let jsonData = try? JSONSerialization.data(withJSONObject: body)
         request.httpBody = jsonData
-        try! print(String(data: jsonData!, encoding: String.Encoding.utf8))
+        print(String(data: jsonData!, encoding: String.Encoding.utf8) as Any)
 
         let semaphore = DispatchSemaphore(value: 0)
 
@@ -133,8 +133,46 @@ class RESTService: RESTServiceI {
         return returnRESTResponse
     }
 
-    func delete(url: String, headers: [String: String]?, body: [String: Any]?) throws -> (RESTResponse) {
-        return RESTResponse()
+    func delete(url: String, headers: [String: String]?, body: [String: Any]?) -> (RESTResponse) {
+        debugPrint("RESTService delete method with URL: " + url + " and headers: ")
+        debugPrint(headers)
+        debugPrint("and body: ")
+        debugPrint(body)
+
+        var returnRESTResponse = RESTResponse()
+
+        let url = URL(string: url)!
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        request.httpMethod = "DELETE"
+
+        if headers != nil {
+            for header in headers! {
+                request.addValue(header.value, forHTTPHeaderField: header.key)
+            }
+        }
+
+        let jsonData = try? JSONSerialization.data(withJSONObject: body)
+        request.httpBody = jsonData
+
+        let semaphore = DispatchSemaphore(value: 0)
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            print("calling PUT on " + url.absoluteString)
+            returnRESTResponse = self.parseResponse(data: data, response: response, error: error)
+            semaphore.signal()
+            return
+        }
+
+        task.resume()
+        if semaphore.wait(timeout: DispatchTime.now() + 20.0) == .timedOut {
+            print("timeout")
+            returnRESTResponse.builder(isClientError: true).builder(errorMessage: "timeout")
+        }
+
+
+        return returnRESTResponse
 
     }
 

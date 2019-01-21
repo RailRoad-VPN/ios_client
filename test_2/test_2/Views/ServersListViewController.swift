@@ -42,24 +42,27 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.dataSource = self
         tableView.register(ServersListTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.rowHeight = 50
+        tableView.tableFooterView = UIView(frame: .zero)
+        tableView.tableHeaderView = UIView(frame: .zero)
+        tableView.backgroundColor = UIColor.greyRailRoad
 
-        self.tableView.backgroundColor = UIColor.greyRailRoad
         self.view.addSubview(self.tableView)
         self.refreshControl.addTarget(self, action: #selector(self.refreshServerList(_:)), for: UIControlEvents.valueChanged)
         self.tableView.insertSubview(self.refreshControl, aboveSubview: self.tableView)
 
-        //self.navigationController?.navigationBar.isHidden = false
-
-
         NotificationCenter.default.addObserver(self, selector: #selector(self.refreshServerList(_:)), name: .refreshTableView, object: nil)
-
-
     }
+
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+//    {
+//        return 70
+//    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        self.navigationItem.title = ""
         self.navigationController?.navigationBar.topItem!.title = "Servers"
+        self.navigationController?.navigationBar.backgroundColor = UIColor.greyRailRoad
         if self.servers == nil {
             self.loadServerList()
         }
@@ -72,12 +75,6 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = ServersListTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "cell")
-        //cell.textLabel!.text = animals [indexPath.row]
-//debug
-        //cell.textLabel!.text = servers![indexPath.row]["uuid"] as? String
-        //cell.detailTextLabel!.text = indexPath.row as? String
-
-
         let serverRow = servers![indexPath.row] as Server
 
         print("printing server rows")
@@ -93,9 +90,6 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
         cell.locationAndLoad.text = country + ", " + city + " / Load: " + load + "%"
         cell.serverName.text = "Server #" + num
         cell.backgroundColor = UIColor.greyRailRoad
-//        let expl = UIImageView.init(frame: CGRect.init(x: 10, y: 10, width: 50, height: 50))
-//        expl.image = UIImage.init(named: "image936")
-//        cell.contentView.addSubview(expl)
         return cell;
     }
 

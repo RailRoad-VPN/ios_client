@@ -114,7 +114,7 @@ class UserAPIService: RESTService {
         deviceId.append("P")
 
 
-        let postJson: [String: Any] = [
+        let bodyJson: [String: Any] = [
             "user_uuid": userUuid,
             "device_id": deviceId,
             "platform_id": GlobalSettings.DEVICE_PLATFORM_ID,
@@ -122,7 +122,7 @@ class UserAPIService: RESTService {
             "is_active": true
         ]
 
-        response = post(url: "\(url)/\(userUuid)/devices", headers: headers, body: postJson)
+        response = post(url: "\(url)/\(userUuid)/devices", headers: headers, body: bodyJson)
 
         if response.isSuccess {
             do {
@@ -154,7 +154,7 @@ class UserAPIService: RESTService {
         var response = RESTResponse()
         let headers = prepareHeaders()
 
-        let postJson: [String: Any] = [
+        let bodyJson: [String: Any] = [
             "uuid": userDeviceUuid,
             "user_uuid": userUuid,
             "virtual_ip": virtualIp,
@@ -167,7 +167,7 @@ class UserAPIService: RESTService {
             "modify_reason": "set virtual ip"
         ]
 
-        response = put(url: "\(url)/\(userUuid)/devices/\(userDeviceUuid)", headers: headers, body: postJson)
+        response = put(url: "\(url)/\(userUuid)/devices/\(userDeviceUuid)", headers: headers, body: bodyJson)
 
         if response.isSuccess {
             print("updateUserDevice end")
@@ -179,6 +179,62 @@ class UserAPIService: RESTService {
             throw ErrorsEnum.userAPIServiceSystemError
         }
     }
+
+    public func deleteUserDevice() throws {
+        print("deleteUserDevice enter")
+        if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
+
+        let userUuid = user.getUuid()!
+        let userDeviceUuid = user.getUserDevice()!.getUuid()!
+
+        var response = RESTResponse()
+        let headers = prepareHeaders()
+
+        let bodyJson = [
+            "uuid": userDeviceUuid,
+            "user_uuid": userUuid,
+            "modify_reason": "log_out"
+        ]
+
+        response = delete(url: "\(url)/\(userUuid)/devices/\(userDeviceUuid)", headers: headers, body: bodyJson)
+
+        if response.isSuccess {
+            print("deleteUserDevice end")
+            return
+        } else if (response.statusCode == nil && response.errorMessage != nil) {
+            throw ErrorsEnum.userAPIServiceConnectionProblem
+        } else {
+            print("throw userAPIServiceSystemError")
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
+
+    }
+    //    public void deleteUserDevice(String userUuid, String userDeviceUuid) throws UserServiceException {
+//log.info("deleteUserDevice method enter");
+//String url = String.format("%s/%s/devices/%s", this.getServiceURL(), userUuid, userDeviceUuid);
+//
+//Map<String, String> headers = new HashMap<String, String>();
+//if (!this.deviceToken.equals("")) {
+//    headers.put("x-device-token", deviceToken);
+//}
+//headers.put("x-auth-token", this.utilities.generateAuthToken());
+//
+//
+//HashMap<String, Object> userDevice = new HashMap<String, Object>();
+//userDevice.put("uuid", userDeviceUuid);
+//userDevice.put("user_uuid", userUuid);
+//userDevice.put("modify_reason", "log out");
+//
+//try {
+//    RESTResponse ur = this.delete(url, userDevice, headers);
+//} catch (RESTException e) {
+//    throw new UserServiceException(e);
+//}
+//
+//log.info("deleteUserDevice method exit");
+//}
 
 // TODO probably another service
     func createConnection(serverUuid: String, virtualIp: String, deviceIp: String) throws {

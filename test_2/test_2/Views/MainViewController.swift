@@ -66,6 +66,14 @@ class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.topItem!.title = "RailRoad VPN"
+        self.navigationController?.navigationBar.backgroundColor = nil
+        self.navigationController?.navigationBar.isTranslucent = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+// TODO need to be uncommented, but there is a bug
+//        self.navigationController?.navigationBar.isTranslucent = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -82,7 +90,6 @@ class MainViewController: UIViewController {
 // VPN button
         let frame2 = CGRect.init(x: screenWidth / 2 - 68, y: screenHeight / 3, width: 136, height: 93)
         self.startStopVPN = UIButton(frame: frame2)
-        self.startStopVPN.setImage(UIImage(named: "redSemaphore"), for: UIControlState.normal)
         self.startStopVPN.setImage(UIImage(named: "blackSemaphore"), for: UIControlState.highlighted)
 
         self.startStopVPN.addTarget(self, action: #selector(self.connectToVPN(_:)), for: .touchUpInside)
@@ -99,14 +106,7 @@ class MainViewController: UIViewController {
 // Hint label
         let hintCommentFrame = CGRect.init(x: screenWidth / 2 - 68, y: screenHeight / 2 + 72, width: 200, height: 30)
         self.hintCommentLabel = UILabel(frame: hintCommentFrame)
-
-        let hintComment = NSMutableAttributedString(string: "Press red semaphore to connect", attributes:
-        [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Light", size: 10)!]
-        )
-        hintComment.addAttribute(.foregroundColor, value: UIColor.white, range: NSRange(location: 0, length: hintComment.length))
-        hintComment.addAttribute(.foregroundColor, value: UIColor.red, range: NSRange(location: 6, length: 3))
         // set label Attribute
-        hintCommentLabel.attributedText = hintComment
         self.view.addSubview(hintCommentLabel)
 
 // servers_list
@@ -122,6 +122,28 @@ class MainViewController: UIViewController {
 
         self.serverList.addTarget(self, action: #selector(self.testAPI(_:)), for: .touchUpInside)
         self.view.addSubview(self.serverList)
+
+        self.setButtonAndHintColor()
+    }
+
+    private func setButtonAndHintColor() {
+        var hintComment: NSMutableAttributedString
+        if self.vpnService.getIsVPNOn() {
+            self.startStopVPN.setImage(UIImage(named: "greenSemaphore"), for: UIControlState.normal)
+            hintComment = NSMutableAttributedString(string: "Press green semaphore to disconnect", attributes:
+            [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Light", size: 10)!]
+            )
+            hintComment.addAttribute(.foregroundColor, value: UIColor.white, range: NSRange(location: 0, length: hintComment.length))
+            hintComment.addAttribute(.foregroundColor, value: UIColor.green, range: NSRange(location: 6, length: 5))
+        } else {
+            self.startStopVPN.setImage(UIImage(named: "redSemaphore"), for: UIControlState.normal)
+            hintComment = NSMutableAttributedString(string: "Press red semaphore to connect", attributes:
+            [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Light", size: 10)!]
+            )
+            hintComment.addAttribute(.foregroundColor, value: UIColor.white, range: NSRange(location: 0, length: hintComment.length))
+            hintComment.addAttribute(.foregroundColor, value: UIColor.red, range: NSRange(location: 6, length: 3))
+        }
+        self.hintCommentLabel.attributedText = hintComment
     }
 
     @objc func connectToVPN(_ sender: UIButton) {
@@ -149,11 +171,7 @@ class MainViewController: UIViewController {
         group.notify(queue: DispatchQueue.main) {
             print("asyncDisconnectDispatchGroup notify enter")
             self.startStopVPN.imageView!.stopAnimating()
-            if self.vpnService.getIsVPNOn() {
-                self.startStopVPN.setImage(UIImage(named: "greenSemaphore"), for: UIControlState.normal)
-            } else {
-                self.startStopVPN.setImage(UIImage(named: "redSemaphore"), for: UIControlState.normal)
-            }
+            self.setButtonAndHintColor()
             print("asyncDisconnectDispatchGroup notify exit")
         }
     }
