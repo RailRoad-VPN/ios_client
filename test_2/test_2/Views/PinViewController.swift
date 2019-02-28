@@ -141,15 +141,15 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print("While entering the characters this method gets called")
+        print_f(#file, #function, "While entering the characters this method gets called")
         let text = textField.text
-        print(text as Any)
+        print_f(#file, #function, text as Any)
 
         let userChar = string.cString(using: String.Encoding.utf8)!
         let isBackspace = strcmp(userChar, "\\b")
 
         if (isBackspace == -92) {
-            print("backspace")
+            print_f(#file, #function, "backspace")
             switch textField {
             case firstPinNum:
                 firstPinNum.becomeFirstResponder()
@@ -169,7 +169,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
                 fourthPinNum.backgroundColor = UIColor.yellowRailRoad
                 actionStatus.isHidden = true
                 actionStatus.text = "LOADING..."
-            default: print("no")
+            default: print_f(#file, #function, "no")
             }
         } else {
             switch textField {
@@ -184,18 +184,18 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
             case thirdPinNum:
                 fourthPinNum.text = string
                 fourthPinNum.becomeFirstResponder()
-                print("timeToCheckPin")
+                print_f(#file, #function, "timeToCheckPin")
                 actionStatus.isHidden = false
                 fourthPinNum.isUserInteractionEnabled = false
                 self.pinDidInsert()
             case fourthPinNum:
                 fourthPinNum.text = string
-                print("timeToCheckPin")
+                print_f(#file, #function, "timeToCheckPin")
                 actionStatus.isHidden = false
                 fourthPinNum.isUserInteractionEnabled = false
                 self.pinDidInsert()
 //                fourthPinNum.resignFirstResponder()
-            default: print("no")
+            default: print_f(#file, #function, "no")
             }
         }
 
@@ -258,12 +258,12 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
     }
 
     func isPinCorrect(pincode: String) throws -> Bool {
-        print("isPinCorrect with pin: " + pincode)
+        print_f(#file, #function, "isPinCorrect with pin: " + pincode)
 
         do {
             let user = try userAPIService.receiveUser(pincode: pincode)
             CacheMetaService.shared.save(any: user, toFile: FilesEnum.user.rawValue)
-            print(user.getUuid)
+            print_f(#file, #function, user.getUuid)
             return true
         } catch ErrorsEnum.userAPIServiceWrongPin {
             return false

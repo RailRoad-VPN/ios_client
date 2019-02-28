@@ -10,8 +10,8 @@ class Meta: NSObject, NSCoding {
     var condition_version: Int
 
     init(dictionary: [String: Any]) throws {
-        print("Meta init(dictionary:) enter")
-        print(dictionary)
+        print_f(#file, #function, "Meta init(dictionary:) enter")
+        print_f(#file, #function, dictionary)
         if dictionary["version"] != nil && dictionary["condition_version"] != nil {
             self.version = dictionary["version"] as! Int
             self.condition_version = dictionary["condition_version"] as! Int
@@ -19,7 +19,7 @@ class Meta: NSObject, NSCoding {
             throw ErrorsEnum.absentMetaProperty
         }
         super.init()
-        print("Meta init(dictionary:) exit")
+        print_f(#file, #function, "Meta init(dictionary:) exit")
 
     }
 

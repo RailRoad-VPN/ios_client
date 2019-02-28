@@ -22,25 +22,25 @@ class UtilityService {
 
     public static func generateAuthToken() -> String {
         let uuid = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
-        print("uuid is: " + uuid)
+        print_f(#file, #function, "uuid is: " + uuid)
         let randomInt = Int(arc4random_uniform(31) + 1)
-        print("randomInt is: " + String(randomInt))
+        print_f(#file, #function, "randomInt is: " + String(randomInt))
         let timeInterval = Int(Date().timeIntervalSince1970)
-        print("present unixtime is: " + String(timeInterval))
+        print_f(#file, #function, "present unixtime is: " + String(timeInterval))
         let dividedUnixtime = Double(timeInterval) / Double(randomInt)
 
         let rondedDividedUnixtimeString = String(format: "%.10f", dividedUnixtime)
-        print("rondedDividedUnixtimeString is: " + rondedDividedUnixtimeString)
+        print_f(#file, #function, "rondedDividedUnixtimeString is: " + rondedDividedUnixtimeString)
         let lenghtOfRondedDividedUnixtimeString = rondedDividedUnixtimeString.count
-        print("lenghtOfRondedDividedUnixtimeString is: " + String(lenghtOfRondedDividedUnixtimeString))
+        print_f(#file, #function, "lenghtOfRondedDividedUnixtimeString is: " + String(lenghtOfRondedDividedUnixtimeString))
 
         let leftSideToken = uuid.prefix(randomInt)
-        print("leftSideToken is: " + leftSideToken)
+        print_f(#file, #function, "leftSideToken is: " + leftSideToken)
 
 
         let index = uuid.index(uuid.endIndex, offsetBy: randomInt - uuid.count)
         let rightSideToken = uuid.suffix(from: index)
-        print("rightSideToken is: " + rightSideToken)
+        print_f(#file, #function, "rightSideToken is: " + rightSideToken)
 
         var randomIntString: String
         if randomInt < 9 {
@@ -57,7 +57,7 @@ class UtilityService {
         }
         let authToken = randomIntString + lengthDividedUnixtimeString + leftSideToken + rondedDividedUnixtimeString + rightSideToken
 
-        print(authToken)
+        print_f(#file, #function, authToken)
         return authToken
     }
 }

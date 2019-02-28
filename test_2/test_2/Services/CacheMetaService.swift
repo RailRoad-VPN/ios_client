@@ -32,101 +32,101 @@ class CacheMetaService: RESTService {
             do {
                 try fileManager.createDirectory(atPath: dir.path, withIntermediateDirectories: false)
             } catch {
-                print("CacheMetaService cannot create directory")
+                print_f(#file, #function, "CacheMetaService cannot create directory")
             }
         }
     }
 
 
     func save(any: Any, toFile: String) {
-        print("CacheMetaService save anything to file \(toFile) enter")
+        print_f(#file, #function, "CacheMetaService save anything to file \(toFile) enter")
         // Path to save array data
 
         let fileURL = self.dir.appendingPathComponent(toFile)
         let path = URL(fileURLWithPath: fileURL.path)
 
-        print("path is: \(path)")
+        print_f(#file, #function, "path is: \(path)")
         // write to file 2
         let data = NSKeyedArchiver.archivedData(withRootObject: any)
 
         if !(fileManager.fileExists(atPath: path.path)) {
             if !(fileManager.createFile(atPath: path.path, contents: data)) {
-                print("FILE WASNT CREATED. I'm crashing")
+                print_f(#file, #function, "FILE WASNT CREATED. I'm crashing")
                 exit(100)
             }
         } else {
             try! data.write(to: path, options: .atomic)
         }
 
-        print("CacheMetaService save anything exit")
+        print_f(#file, #function, "CacheMetaService save anything exit")
     }
 
     func readAny(fromFile: String) -> Any? {
-        print("CacheMetaService readAny from file \(fromFile) enter")
+        print_f(#file, #function, "CacheMetaService readAny from file \(fromFile) enter")
 
         let fileURL = self.dir.appendingPathComponent(fromFile)
         let any = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as Any
 
-        print("CacheMetaService readAny from file exit")
+        print_f(#file, #function, "CacheMetaService readAny from file exit")
         return any
     }
 
     func readServersArray(fromFile: String) -> [Server]? {
-        print("CacheMetaService read servers array from file: \(fromFile) enter")
+        print_f(#file, #function, "CacheMetaService read servers array from file: \(fromFile) enter")
         let fileURL = self.dir.appendingPathComponent(fromFile)
 
         let array = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as? [Server]
 
-        print("reading servers:")
-        print(array)
-        print("CacheMetaService read servers array exit")
+        print_f(#file, #function, "reading servers:")
+        print_f(#file, #function, array)
+        print_f(#file, #function, "CacheMetaService read servers array exit")
         return array
     }
 
     func readMeta(fromFile: String) -> Meta? {
-        print("CacheMetaService read meta from file: \(fromFile) enter")
+        print_f(#file, #function, "CacheMetaService read meta from file: \(fromFile) enter")
         let fileURL = self.dir.appendingPathComponent(fromFile)
 
         let meta = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as? Meta
 
-        print("reading meta:")
-        print(meta?.version)
-        print(meta?.condition_version)
-        print("CacheMetaService read servers array exit")
+        print_f(#file, #function, "reading meta:")
+        print_f(#file, #function, meta?.version)
+        print_f(#file, #function, meta?.condition_version)
+        print_f(#file, #function, "CacheMetaService read servers array exit")
         return meta
     }
 
     func readDictArray(fromFile: String) -> [[String: Any]]? {
-        print("CacheMetaService read dict array from file: \(fromFile) enter")
+        print_f(#file, #function, "CacheMetaService read dict array from file: \(fromFile) enter")
         let fileURL = self.dir.appendingPathComponent(fromFile)
 
         let dict = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as? [[String: Any]]
 
-        print("CacheMetaService read dict array exit")
+        print_f(#file, #function, "CacheMetaService read dict array exit")
         return dict
     }
 
     func readDict(fromFile: String) -> [String: Any]? {
-        print("CacheMetaService read dict from file \(fromFile) enter")
+        print_f(#file, #function, "CacheMetaService read dict from file \(fromFile) enter")
         let fileURL = self.dir.appendingPathComponent(fromFile)
         let dict = NSKeyedUnarchiver.unarchiveObject(withFile: fileURL.path) as? [String: Any]
 
-        print("CacheMetaService read dict exit")
+        print_f(#file, #function, "CacheMetaService read dict exit")
         return dict
     }
 
 
     func backgroundUpdateCheckGlobalMeta(once: Bool = false) {
-        print("background self.updateRequestVPNServers init")
+        print_f(#file, #function, "background self.updateRequestVPNServers init")
         DispatchQueue.global(qos: .background).async {
 
             while true {
-                print("background self.updateRequestVPNServers enter")
+                print_f(#file, #function, "background self.updateRequestVPNServers enter")
                 var remoteGeneralMeta = Meta(version: 0, condition: 0)
                 do {
                     remoteGeneralMeta = try self.getGeneralMeta()
                 } catch {
-                    print("background updateRequestVPNServers error, i will try next time")
+                    print_f(#file, #function, "background updateRequestVPNServers error, i will try next time")
                 }
 
                 if self.isGeneralMetaOld(remoteGeneralMeta: remoteGeneralMeta) {
@@ -136,12 +136,12 @@ class CacheMetaService: RESTService {
                         try self.save(any: us.getVPNServers(), toFile: FilesEnum.vpnServers.rawValue)
                         self.setGeneralMetaCached(remoteGeneralMeta: remoteGeneralMeta)
                         NotificationCenter.default.post(name: .refreshTableView, object: nil)
-                        print("background self.updateRequestVPNServers exit. Meta is old")
+                        print_f(#file, #function, "background self.updateRequestVPNServers exit. Meta is old")
                     } catch {
-                        print("background updateRequestVPNServers error, i will try next time")
+                        print_f(#file, #function, "background updateRequestVPNServers error, i will try next time")
                     }
                 } else {
-                    print("background self.updateRequestVPNServers exit. Meta is up to date")
+                    print_f(#file, #function, "background self.updateRequestVPNServers exit. Meta is up to date")
                 }
                 if (once) {
                     return
@@ -171,7 +171,7 @@ class CacheMetaService: RESTService {
 
     func getGeneralMeta() throws -> Meta {
 
-        print("getGeneralMeta enter")
+        print_f(#file, #function, "getGeneralMeta enter")
 
         var response = RESTResponse()
 
@@ -181,23 +181,23 @@ class CacheMetaService: RESTService {
         if response.isSuccess && dict != nil {
             do {
                 let meta = try Meta(dictionary: dict!)
-                print("getGeneralMeta end")
+                print_f(#file, #function, "getGeneralMeta end")
                 return meta
             } catch ErrorsEnum.absentMetaProperty {
-                print("throw metaCacheServiceSystemError")
+                print_f(#file, #function, "throw metaCacheServiceSystemError")
                 throw ErrorsEnum.metaCacheServiceSystemError
             }
 
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.metaCacheServiceConnectionProblem
         } else {
-            print("throw metaCacheServiceSystemError")
+            print_f(#file, #function, "throw metaCacheServiceSystemError")
             throw ErrorsEnum.metaCacheServiceSystemError
         }
     }
 
     func clearSettings() throws {
-        print("CacheMetaService delete everything to hell enter")
+        print_f(#file, #function, "CacheMetaService delete everything to hell enter")
         // Path to save array data
         do {
             let directoryContents = try fileManager.contentsOfDirectory(at: self.dir, includingPropertiesForKeys: .none)
@@ -208,6 +208,6 @@ class CacheMetaService: RESTService {
             throw ErrorsEnum.metaCacheSystemError
         }
 
-        print("CacheMetaService delete everything to hell exit")
+        print_f(#file, #function, "CacheMetaService delete everything to hell exit")
     }
 }

@@ -10,12 +10,12 @@ class Connection: NSObject, NSCoding {
     var serverUUID: String?
 
     override init() {
-        print("init connection from file start")
+        print_f(#file, #function, "init connection from file start")
         super.init()
         let connection = CacheMetaService.shared.readAny(fromFile: FilesEnum.currentConnection.rawValue) as? Connection
         self.uuid = connection?.uuid
         self.serverUUID = connection?.serverUUID
-        print("init connection from file end")
+        print_f(#file, #function, "init connection from file end")
 
     }
 

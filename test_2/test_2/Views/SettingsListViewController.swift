@@ -46,7 +46,7 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(settingsItems[indexPath.row])
+        print_f(#file, #function, settingsItems[indexPath.row])
         if indexPath.row == 0 {
             guard let url = URL(string: "https://rroadvpn.net/en/profile") else {
                 return

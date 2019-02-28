@@ -21,7 +21,7 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
         self.refreshControl = UIRefreshControl()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        print("ServesrsList INIT works!!!")
+        print_f(#file, #function, "ServesrsList INIT works!!!")
 
 
     }
@@ -77,11 +77,11 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
         let cell = ServersListTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "cell")
         let serverRow = servers![indexPath.row] as Server
 
-        print("printing server rows")
-        print(serverRow.condition_version)
-        print(serverRow.country_code)
-        print(serverRow.uuid)
-        print(serverRow.bandwidth)
+        print_f(#file, #function, "printing server rows")
+        print_f(#file, #function, serverRow.condition_version)
+        print_f(#file, #function, serverRow.country_code)
+        print_f(#file, #function, serverRow.uuid)
+        print_f(#file, #function, serverRow.bandwidth)
         let load = String(serverRow.load ?? 0)
         let num = String(serverRow.num ?? 0)
         let country = String(serverRow.country_str_code ?? "hidden country")
@@ -95,32 +95,32 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let uuid = servers![indexPath.row].uuid
-        print(uuid)
+        print_f(#file, #function, uuid)
 
     }
 
     @objc func refreshServerList(_ sender: Any) {
-        print("notification refreshServerList enter")
+        print_f(#file, #function, "notification refreshServerList enter")
         loadServerList()
-        print("notification refreshServerList exit")
+        print_f(#file, #function, "notification refreshServerList exit")
 
     }
 
     func loadServerList() {
-        print("loadServerList() enter")
+        print_f(#file, #function, "loadServerList() enter")
         DispatchQueue.global(qos: .background).async {
 
             self.servers = CacheMetaService.shared.readAny(fromFile: FilesEnum.vpnServers.rawValue) as? [Server]
 
             if self.servers == nil {
-                print("!!!!!!!!!!servers are null!!!!!!!!!!!")
+                print_f(#file, #function, "!!!!!!!!!!servers are null!!!!!!!!!!!")
                 CacheMetaService.shared.backgroundUpdateCheckGlobalMeta(once: true)
             }
 
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
-                print("loadServerList() exit")
+                print_f(#file, #function, "loadServerList() exit")
 
             }
         }
@@ -139,7 +139,7 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        print("user stopped dragging")
+        print_f(#file, #function, "user stopped dragging")
 
     }
 

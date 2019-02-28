@@ -23,26 +23,26 @@ class UserAPIService: RESTService {
         if response.isSuccess {
             do {
                 let user = try User(dictionary: (response.data)!)
-                print("receiveUser before return")
+                print_f(#file, #function, "receiveUser before return")
                 self.user = user
                 return user
             } catch ErrorsEnum.absentUserProperty {
-                print("throw userAPIServiceSystemError")
+                print_f(#file, #function, "throw userAPIServiceSystemError")
                 throw ErrorsEnum.userAPIServiceSystemError
             }
         } else if response.isClientError == true && response.statusCode! < 500 {
-            print("throw userAPIServiceWrongPin")
+            print_f(#file, #function, "throw userAPIServiceWrongPin")
             throw ErrorsEnum.userAPIServiceWrongPin
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
         } else {
-            print("throw userAPIServiceSystemError")
+            print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
     }
 
     func receiveRandomVPNServer() throws -> String {
-        print("getRandomVPNServer start")
+        print_f(#file, #function, "getRandomVPNServer start")
         if user.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
         }
@@ -56,8 +56,8 @@ class UserAPIService: RESTService {
 
         if response.isSuccess {
             if let serverUuid = response.data!["uuid"] as? String {
-                print("serverUuid is:" + serverUuid)
-                print("getRandomVPNServer end")
+                print_f(#file, #function, "serverUuid is:" + serverUuid)
+                print_f(#file, #function, "getRandomVPNServer end")
                 return serverUuid
             } else {
                 throw ErrorsEnum.userAPIServiceSystemError
@@ -65,13 +65,13 @@ class UserAPIService: RESTService {
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
         } else {
-            print("throw userAPIServiceSystemError")
+            print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
     }
 
     func receiveVPNConfigurationByUserAndServer(serverUuid: String) throws -> String {
-        print("receiveVPNConfigurationByUserAndServer start")
+        print_f(#file, #function, "receiveVPNConfigurationByUserAndServer start")
         if user.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
         }
@@ -86,8 +86,8 @@ class UserAPIService: RESTService {
 
         if response.isSuccess {
             if let config = response.data!["configuration"] as? String {
-                print("config:" + config)
-                print("receiveVPNConfigurationByUserAndServer end")
+                print_f(#file, #function, "config:" + config)
+                print_f(#file, #function, "receiveVPNConfigurationByUserAndServer end")
                 return config
             } else {
                 throw ErrorsEnum.userAPIServiceSystemError
@@ -100,13 +100,13 @@ class UserAPIService: RESTService {
     }
 
     func createUserDevice() throws -> UserDevice {
-        print("createUserDevice start")
+        print_f(#file, #function, "createUserDevice start")
         if user.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
         }
 
         let userUuid = user.getUuid()!
-        print("create user device with user_uuid: " + userUuid)
+        print_f(#file, #function, "create user device with user_uuid: " + userUuid)
 
         var response = RESTResponse()
         let headers = prepareHeaders()
@@ -128,7 +128,7 @@ class UserAPIService: RESTService {
             do {
                 let userDevice = try UserDevice(headers: response.header!, deviceId: deviceId)
                 self.user.setUserDevice(userDevice: userDevice)
-                print("createUserDevice end")
+                print_f(#file, #function, "createUserDevice end")
                 return userDevice
             } catch ErrorsEnum.absentUserDeviceProperty {
                 throw ErrorsEnum.userAPIServiceSystemError
@@ -136,20 +136,20 @@ class UserAPIService: RESTService {
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
         } else {
-            print("throw userAPIServiceSystemError")
+            print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
     }
 
     func updateUserDevice(virtualIp: String, deviceIp: String, location: String) throws {
-        print("updateUserDevice start")
+        print_f(#file, #function, "updateUserDevice start")
         if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
         }
 
         let userUuid = user.getUuid()!
         let userDeviceUuid = user.getUserDevice()!.getUuid()!
-        print("updateUserDevice with user_uuid: " + userUuid + "and ips...")
+        print_f(#file, #function, "updateUserDevice with user_uuid: " + userUuid + "and ips...")
 
         var response = RESTResponse()
         let headers = prepareHeaders()
@@ -170,18 +170,18 @@ class UserAPIService: RESTService {
         response = put(url: "\(url)/\(userUuid)/devices/\(userDeviceUuid)", headers: headers, body: bodyJson)
 
         if response.isSuccess {
-            print("updateUserDevice end")
+            print_f(#file, #function, "updateUserDevice end")
             return
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
         } else {
-            print("throw userAPIServiceSystemError")
+            print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
     }
 
     public func deleteUserDevice() throws {
-        print("deleteUserDevice enter")
+        print_f(#file, #function, "deleteUserDevice enter")
         if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
         }
@@ -201,12 +201,12 @@ class UserAPIService: RESTService {
         response = delete(url: "\(url)/\(userUuid)/devices/\(userDeviceUuid)", headers: headers, body: bodyJson)
 
         if response.isSuccess {
-            print("deleteUserDevice end")
+            print_f(#file, #function, "deleteUserDevice end")
             return
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
         } else {
-            print("throw userAPIServiceSystemError")
+            print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
 
@@ -215,7 +215,7 @@ class UserAPIService: RESTService {
 
 // TODO probably another service
     func createConnection(serverUuid: String, virtualIp: String, deviceIp: String) throws -> String {
-        print("createConnection start")
+        print_f(#file, #function, "createConnection start")
         if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
         }
@@ -249,19 +249,19 @@ class UserAPIService: RESTService {
 
         if response.isSuccess {
             self.user.setCurrentConnectionUUID(currentConnectionUUID: (response.header!["Location"]?.split(separator: "/").suffix(1).joined(separator: "/"))!)
-            print("createConnection end")
+            print_f(#file, #function, "createConnection end")
             return user.getCurrentConnectionUUID()!
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
         } else {
-            print("throw userAPIServiceSystemError")
+            print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
     }
 
     // TODO probably another service
     func updateConnection(connectionUUID: String, serverUuid: String, bytes_i: Int, bytes_o: Int, isConnected: Bool) throws {
-        print("createConnection start")
+        print_f(#file, #function, "createConnection start")
         if self.user.getCurrentConnectionUUID() == nil || self.user.getUserDevice()?.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
         }
@@ -281,12 +281,12 @@ class UserAPIService: RESTService {
                 headers: headers, body: postJson)
 
         if response.isSuccess {
-            print("createConnection end")
+            print_f(#file, #function, "createConnection end")
             return
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
         } else {
-            print("throw userAPIServiceSystemError")
+            print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
     }
@@ -294,7 +294,7 @@ class UserAPIService: RESTService {
 
 // TODO probably another service
     func getVPNServers() throws -> [Server] {
-        print("getVPNServers enter")
+        print_f(#file, #function, "getVPNServers enter")
 
         if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
@@ -312,17 +312,17 @@ class UserAPIService: RESTService {
             for serverDict in response.dataArray! {
                 let server = Server(dictionary: serverDict)
                 serversArray.append(server)
-                print("server information")
-                print(server.uuid)
-                print(server.num)
-                print(server.city_id)
+                print_f(#file, #function, "server information")
+                print_f(#file, #function, server.uuid)
+                print_f(#file, #function, server.num)
+                print_f(#file, #function, server.city_id)
             }
-            print("updateUserDevice end")
+            print_f(#file, #function, "updateUserDevice end")
             return serversArray
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
         } else {
-            print("throw userAPIServiceSystemError")
+            print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
     }

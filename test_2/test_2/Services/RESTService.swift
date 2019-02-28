@@ -12,8 +12,8 @@ class RESTService: RESTServiceI {
 //    }
 
     func get(url: String, headers: [String: String]?) -> (RESTResponse) {
-        debugPrint("RESTService get method with URL: " + url + " and headers: ")
-        debugPrint(headers)
+        print_f(#file, #function, "RESTService get method with URL: " + url + " and headers: ")
+        print_f(#file, #function, headers)
         var returnRESTResponse = RESTResponse()
 
         let url = URL(string: url)!
@@ -35,7 +35,7 @@ class RESTService: RESTServiceI {
 
         let task = session.dataTask(with: request, completionHandler: {
             (body, response, error) in
-            print("calling GET on " + url.absoluteString)
+            print_f(#file, #function, "calling GET on " + url.absoluteString)
             returnRESTResponse = self.parseResponse(data: body, response: response, error: error)
             semaphore.signal()
             return
@@ -43,7 +43,7 @@ class RESTService: RESTServiceI {
 
         task.resume()
         if semaphore.wait(timeout: DispatchTime.now() + 310.0) == .timedOut {
-            print("TIMEOUT")
+            print_f(#file, #function, "TIMEOUT")
             returnRESTResponse.builder(isClientError: true).builder(errorMessage: "timeout")
         }
 
@@ -51,10 +51,10 @@ class RESTService: RESTServiceI {
     }
 
     func post(url: String, headers: [String: String]?, body: [String: Any]?) -> (RESTResponse) {
-        debugPrint("RESTService post method with URL: " + url + " and headers: ")
-        debugPrint(headers)
-        debugPrint("and body: ")
-        debugPrint(body)
+        print_f(#file, #function, "RESTService post method with URL: " + url + " and headers: ")
+        print_f(#file, #function, headers)
+        print_f(#file, #function, "and body: ")
+        print_f(#file, #function, body)
 
         var returnRESTResponse = RESTResponse()
 
@@ -72,19 +72,19 @@ class RESTService: RESTServiceI {
 
         let jsonData = try? JSONSerialization.data(withJSONObject: body)
         request.httpBody = jsonData
-        print(String(data: jsonData!, encoding: String.Encoding.utf8) as Any)
+        print_f(#file, #function, String(data: jsonData!, encoding: String.Encoding.utf8) as Any)
 
         let semaphore = DispatchSemaphore(value: 0)
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            print("calling POST on " + url.absoluteString)
+            print_f(#file, #function, "calling POST on " + url.absoluteString)
             returnRESTResponse = self.parseResponse(data: data, response: response, error: error)
             semaphore.signal()
             return
         }
         task.resume()
         if semaphore.wait(timeout: DispatchTime.now() + 20.0) == .timedOut {
-            print("timeout")
+            print_f(#file, #function, "timeout")
             returnRESTResponse.builder(isClientError: true).builder(errorMessage: "timeout")
         }
 
@@ -92,10 +92,10 @@ class RESTService: RESTServiceI {
     }
 
     func put(url: String, headers: [String: String]?, body: [String: Any]?) -> (RESTResponse) {
-        debugPrint("RESTService put method with URL: " + url + " and headers: ")
-        debugPrint(headers)
-        debugPrint("and body: ")
-        debugPrint(body)
+        print_f(#file, #function, "RESTService put method with URL: " + url + " and headers: ")
+        print_f(#file, #function, headers)
+        print_f(#file, #function, "and body: ")
+        print_f(#file, #function, body)
 
         var returnRESTResponse = RESTResponse()
 
@@ -117,7 +117,7 @@ class RESTService: RESTServiceI {
         let semaphore = DispatchSemaphore(value: 0)
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            print("calling PUT on " + url.absoluteString)
+            print_f(#file, #function, "calling PUT on " + url.absoluteString)
             returnRESTResponse = self.parseResponse(data: data, response: response, error: error)
             semaphore.signal()
             return
@@ -125,7 +125,7 @@ class RESTService: RESTServiceI {
 
         task.resume()
         if semaphore.wait(timeout: DispatchTime.now() + 20.0) == .timedOut {
-            print("timeout")
+            print_f(#file, #function, "timeout")
             returnRESTResponse.builder(isClientError: true).builder(errorMessage: "timeout")
         }
 
@@ -134,10 +134,10 @@ class RESTService: RESTServiceI {
     }
 
     func delete(url: String, headers: [String: String]?, body: [String: Any]?) -> (RESTResponse) {
-        debugPrint("RESTService delete method with URL: " + url + " and headers: ")
-        debugPrint(headers)
-        debugPrint("and body: ")
-        debugPrint(body)
+        print_f(#file, #function, "RESTService delete method with URL: " + url + " and headers: ")
+        print_f(#file, #function, headers)
+        print_f(#file, #function, "and body: ")
+        print_f(#file, #function, body)
 
         var returnRESTResponse = RESTResponse()
 
@@ -159,7 +159,7 @@ class RESTService: RESTServiceI {
         let semaphore = DispatchSemaphore(value: 0)
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            print("calling PUT on " + url.absoluteString)
+            print_f(#file, #function, "calling PUT on " + url.absoluteString)
             returnRESTResponse = self.parseResponse(data: data, response: response, error: error)
             semaphore.signal()
             return
@@ -167,7 +167,7 @@ class RESTService: RESTServiceI {
 
         task.resume()
         if semaphore.wait(timeout: DispatchTime.now() + 20.0) == .timedOut {
-            print("timeout")
+            print_f(#file, #function, "timeout")
             returnRESTResponse.builder(isClientError: true).builder(errorMessage: "timeout")
         }
 
@@ -177,10 +177,10 @@ class RESTService: RESTServiceI {
     }
 
     func parseResponse(data: Data?, response: URLResponse?, error: Error?) -> RESTResponse {
-        print("parseResponse start")
-        debugPrint(data)
-        debugPrint(response)
-        debugPrint(error)
+        print_f(#file, #function, "parseResponse start")
+        print_f(#file, #function, data)
+        print_f(#file, #function, response)
+        print_f(#file, #function, error)
 
         let restResponse = RESTResponse()
 
@@ -189,15 +189,15 @@ class RESTService: RESTServiceI {
 
         if error != nil {
             restResponse.builder(errorMessage: error!.localizedDescription)
-            print("ERROR: " + error!.localizedDescription)
+            print_f(#file, #function, "ERROR: " + error!.localizedDescription)
         } else {
             httpResponse = (response as! HTTPURLResponse)
             statusCode = httpResponse!.statusCode
             restResponse.builder(statusCode: statusCode!).builder(response: httpResponse!.allHeaderFields as! [String: String])
 
-            print("Check status code")
+            print_f(#file, #function, "Check status code")
             if statusCode! >= 200 && statusCode! < 400 {
-                print("success status code")
+                print_f(#file, #function, "success status code")
                 do {
                     let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any]
                     if json!["data"] != nil {
@@ -210,23 +210,23 @@ class RESTService: RESTServiceI {
 
                     restResponse.builder(isSuccess: true)
                 } catch let error {
-                    print("json error: \(error)")
+                    print_f(#file, #function, "json error: \(error)")
                 }
             } else if statusCode! >= 400 && statusCode! < 500 {
 //client error
-                print("client error status code")
+                print_f(#file, #function, "client error status code")
                 restResponse.builder(errorMessage: String(data: data!, encoding: .utf8)!)
                         .builder(isSuccess: false).builder(isClientError: true)
-                debugPrint(restResponse.errorMessage)
+                print_f(#file, #function, restResponse.errorMessage)
             } else if statusCode! >= 500 && statusCode! < 600 {
 //server error
-                print("server error status code")
+                print_f(#file, #function, "server error status code")
                 restResponse.builder(errorMessage: String(data: data!, encoding: .utf8)!)
                         .builder(isSuccess: false).builder(isClientError: false)
-                debugPrint(restResponse.errorMessage)
+                print_f(#file, #function, restResponse.errorMessage)
             }
         }
-        print("parseResponse end")
+        print_f(#file, #function, "parseResponse end")
         return restResponse
     }
 }

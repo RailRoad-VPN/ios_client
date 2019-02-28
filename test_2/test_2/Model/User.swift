@@ -15,7 +15,7 @@ class User: NSObject, NSCoding {
 
 
     override init() {
-        print("init user from settings start")
+        print_f(#file, #function, "init user from settings start")
         super.init()
         let user = CacheMetaService.shared.readAny(fromFile: FilesEnum.user.rawValue) as? User
         self.uuid = user?.uuid
@@ -24,7 +24,7 @@ class User: NSObject, NSCoding {
         self.isEnabled = user?.isEnabled
 
         self.userDevice = UserDevice()
-        print("init user from settings end")
+        print_f(#file, #function, "init user from settings end")
 
     }
 
@@ -38,7 +38,7 @@ class User: NSObject, NSCoding {
     }
 
     init(dictionary: [String: Any]) throws {
-        print("init user from dictionary start")
+        print_f(#file, #function, "init user from dictionary start")
         if (dictionary["uuid"] != nil &&
                 (dictionary["email"] != nil) &&
                 (dictionary["created_date"] != nil) &&
@@ -53,12 +53,12 @@ class User: NSObject, NSCoding {
         }
 
         super.init()
-        print("user properties:")
-        print(uuid)
-        print(email)
-        print(createdDate)
-        print(isEnabled)
-        print("init user from dictionary end")
+        print_f(#file, #function, "user properties:")
+        print_f(#file, #function, uuid)
+        print_f(#file, #function, email)
+        print_f(#file, #function, createdDate)
+        print_f(#file, #function, isEnabled)
+        print_f(#file, #function, "init user from dictionary end")
     }
 
     func getUuid() -> String? {
@@ -85,14 +85,14 @@ class User: NSObject, NSCoding {
     }
 
     public func setUserDevice(userDevice: UserDevice) {
-        print("setUserDevice start")
+        print_f(#file, #function, "setUserDevice start")
         self.userDevice = userDevice
-        print("setUserDevice end")
+        print_f(#file, #function, "setUserDevice end")
     }
     public func setCurrentConnectionUUID(currentConnectionUUID: String) {
-        print("setCurrentConnectionUUID start")
+        print_f(#file, #function, "setCurrentConnectionUUID start")
         self.currentConnectionUUID = currentConnectionUUID
-        print("setCurrentConnectionUUID end")
+        print_f(#file, #function, "setCurrentConnectionUUID end")
     }
 
     required public init(coder aDecoder: NSCoder) {

@@ -34,6 +34,6 @@ class TabViewController: UITabBarController {
 
         self.tabBar.barTintColor = UIColor.black
         self.viewControllers = tabBarList
-        print("tabbar controller wtf?")
+        print_f(#file, #function, "tabbar controller wtf?")
     }
 }

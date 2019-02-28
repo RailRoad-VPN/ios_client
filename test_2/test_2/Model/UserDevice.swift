@@ -12,18 +12,18 @@ class UserDevice: NSObject, NSCoding {
     private var deviceIp: String?
 
     override init() {
-        print("init userDevice from settings start")
+        print_f(#file, #function, "init userDevice from settings start")
         super.init()
         let userDevice = CacheMetaService.shared.readAny(fromFile: FilesEnum.userDevice.rawValue) as? UserDevice
         self.uuid = userDevice?.uuid
         self.id = userDevice?.id
         self.token = userDevice?.token
-        print("init userDevice from settings end")
+        print_f(#file, #function, "init userDevice from settings end")
     }
 
 
     init(headers: [String: String], deviceId: String) throws {
-        print("init userDevice from dictionaries start")
+        print_f(#file, #function, "init userDevice from dictionaries start")
         if (headers["Location"] != nil && headers["x-device-token"] != nil) {
             self.uuid = headers["Location"]?.split(separator: "/").suffix(1).joined(separator: "/")
             self.token = headers["x-device-token"]
@@ -33,10 +33,10 @@ class UserDevice: NSObject, NSCoding {
 
         self.id = deviceId
         super.init()
-        print("uuid is: " + self.uuid!)
-        print("token is: " + self.token!)
-        print("id is: " + (self.id ?? "nil" ))
-        print("init userDevice from dictionaries end")
+        print_f(#file, #function, "uuid is: " + self.uuid!)
+        print_f(#file, #function, "token is: " + self.token!)
+        print_f(#file, #function, "id is: " + (self.id ?? "nil" ))
+        print_f(#file, #function, "init userDevice from dictionaries end")
     }
 
     func setDeviceIp(deviceIp: String) {

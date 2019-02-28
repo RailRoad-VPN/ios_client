@@ -12,10 +12,10 @@ class VPNService {
 
     init() {
 // todo check if vpn is active
-        print("VPNService init enter")
+        print_f(#file, #function, "VPNService init enter")
         self.isVPNOn = false
         self.VPNStatus = VPNStatesEnum.OFF
-        print("VPNService init exit")
+        print_f(#file, #function, "VPNService init exit")
     }
 
     func setIsVPNOn(isVPNOn: Bool) {
@@ -35,35 +35,35 @@ class VPNService {
     }
 
     func connect(base64Config: String) throws {
-        print("VPNService connect by base64 config enter")
+        print_f(#file, #function, "VPNService connect by base64 config enter")
         var config = ""
         do {
             config = try UtilityService.decodeBase64(string: base64Config)
         } catch ErrorsEnum.utilityServiceUnableToDecodeBase64 {
-            print("cant decode config")
+            print_f(#file, #function, "cant decode config")
             throw ErrorsEnum.VPNServiceSystemError
         }
 
         self.connect(config: config)
-        print("VPNService connect by base64 config exit")
+        print_f(#file, #function, "VPNService connect by base64 config exit")
     }
 
     func connect(config: String) {
-        print("VPNService connect enter")
-        print("connecting...")
+        print_f(#file, #function, "VPNService connect enter")
+        print_f(#file, #function, "connecting...")
         DispatchSemaphore.init(value: 0).wait(timeout: .now() + 3)
         self.isVPNOn = true
         self.VPNStatus = VPNStatesEnum.ON
-        print("VPNService connect exit")
+        print_f(#file, #function, "VPNService connect exit")
     }
 
     func disconnect() {
-        print("VPNService disconnect enter")
-        print("disconnecting...")
+        print_f(#file, #function, "VPNService disconnect enter")
+        print_f(#file, #function, "disconnecting...")
         DispatchSemaphore.init(value: 0).wait(timeout: .now() + 3)
         self.isVPNOn = false
         self.VPNStatus = VPNStatesEnum.OFF
-        print("VPNService disconnect exit")
+        print_f(#file, #function, "VPNService disconnect exit")
     }
 
 }

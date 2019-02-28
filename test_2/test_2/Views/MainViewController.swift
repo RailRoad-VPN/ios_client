@@ -27,7 +27,7 @@ class MainViewController: UIViewController {
 
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        print("MainController INIT works!!!")
+        print_f(#file, #function, "MainController INIT works!!!")
 
         self.userAPIService = UserAPIService()
         self.vpnService = VPNService()
@@ -147,7 +147,7 @@ class MainViewController: UIViewController {
     }
 
     @objc func connectToVPN(_ sender: UIButton) {
-        print("vpn butt")
+        print_f(#file, #function, "vpn butt")
         startStopVPN.imageView!.animationImages = [UIImage(named: "yellowLeftSemaphore")!, UIImage(named: "yellowRightSemaphore")!]
         startStopVPN.imageView!.animationDuration = 1
         startStopVPN.imageView!.startAnimating()
@@ -155,33 +155,33 @@ class MainViewController: UIViewController {
         initAsyncWorks()
 
         if vpnService.getVPNStatus() == VPNStatesEnum.ON && isWorkerInProgress == false {
-            print("vpn is On. let it Off")
+            print_f(#file, #function, "vpn is On. let it Off")
             isWorkerInProgress = true
             mySerialQueue.async(group: self.group, execute: self.disconnectWorkItem!)
         } else if vpnService.getVPNStatus() == VPNStatesEnum.OFF && isWorkerInProgress == false {
-            print("vpn is Off. let it On")
+            print_f(#file, #function, "vpn is Off. let it On")
             isWorkerInProgress = true
             mySerialQueue.async(group: self.group, execute: self.connnectWorkItem!)
         } else {
-            print("vpn is PREPARING. trying to cancel PREPARING")
+            print_f(#file, #function, "vpn is PREPARING. trying to cancel PREPARING")
             connnectWorkItem!.cancel()
             disconnectWorkItem!.cancel()
         }
 
         group.notify(queue: DispatchQueue.main) {
-            print("asyncDisconnectDispatchGroup notify enter")
+            print_f(#file, #function, "asyncDisconnectDispatchGroup notify enter")
             self.startStopVPN.imageView!.stopAnimating()
             self.setButtonAndHintColor()
-            print("asyncDisconnectDispatchGroup notify exit")
+            print_f(#file, #function, "asyncDisconnectDispatchGroup notify exit")
         }
     }
 
     @objc func testAPI(_ sender: UIButton) {
-//        print("test API pressed")
+//        print_f(#file, #function, "test API pressed")
 //        let user = User()
 
-//        print(Date(), self, #function, "test API end", separator: ": ", to: &Log.log)
-        print_f(#file, #function, "test API end")
+//        print_f(#file, #function, Date(), self, #function, "test API end", separator: ": ", to: &Log.log)
+        print_f(#file, #function,  "test API end")
     }
 
 
@@ -193,21 +193,21 @@ class MainViewController: UIViewController {
             var config = ""
             do {
                 if self.connnectWorkItem!.isCancelled {
-                    print("connnectWorkItem got cancelled before receiveRandomVPNServer")
+                    print_f(#file, #function, "connnectWorkItem got cancelled before receiveRandomVPNServer")
                     self.isWorkerInProgress = false
                     return
                 }
                 serverUuid = try self.userAPIService.receiveRandomVPNServer()
 
                 if self.connnectWorkItem!.isCancelled {
-                    print("connnectWorkItem got cancelled before receiveVPNConfigurationByUserAndServer")
+                    print_f(#file, #function, "connnectWorkItem got cancelled before receiveVPNConfigurationByUserAndServer")
                     self.isWorkerInProgress = false
                     return
                 }
                 config = try self.userAPIService.receiveVPNConfigurationByUserAndServer(serverUuid: serverUuid!)
             } catch ErrorsEnum.userAPIServiceSystemError {
 // TODO show system error
-                print()
+                print_f(#file, #function, "")
                 self.isWorkerInProgress = false
                 return
             } catch ErrorsEnum.userAPIServiceConnectionProblem {
@@ -221,7 +221,7 @@ class MainViewController: UIViewController {
             }
 
             if self.connnectWorkItem!.isCancelled {
-                print("connnectWorkItem got cancelled before vpnService.connect")
+                print_f(#file, #function, "connnectWorkItem got cancelled before vpnService.connect")
                 self.isWorkerInProgress = false
                 return
             }
@@ -256,7 +256,7 @@ class MainViewController: UIViewController {
 
         self.disconnectWorkItem = DispatchWorkItem(qos: .userInitiated, flags: .enforceQoS) {
             if self.disconnectWorkItem!.isCancelled {
-                print("disconnectWorkItem got cancelled before vpnService.disconnect")
+                print_f(#file, #function, "disconnectWorkItem got cancelled before vpnService.disconnect")
                 self.isWorkerInProgress = false
                 return
             }
