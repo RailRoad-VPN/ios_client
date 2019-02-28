@@ -126,7 +126,7 @@ class UserAPIService: RESTService {
 
         if response.isSuccess {
             do {
-                let userDevice = try UserDevice(headers: response.response!, deviceId: deviceId)
+                let userDevice = try UserDevice(headers: response.header!, deviceId: deviceId)
                 self.user.setUserDevice(userDevice: userDevice)
                 print("createUserDevice end")
                 return userDevice
@@ -211,40 +211,19 @@ class UserAPIService: RESTService {
         }
 
     }
-    //    public void deleteUserDevice(String userUuid, String userDeviceUuid) throws UserServiceException {
-//log.info("deleteUserDevice method enter");
-//String url = String.format("%s/%s/devices/%s", this.getServiceURL(), userUuid, userDeviceUuid);
-//
-//Map<String, String> headers = new HashMap<String, String>();
-//if (!this.deviceToken.equals("")) {
-//    headers.put("x-device-token", deviceToken);
-//}
-//headers.put("x-auth-token", this.utilities.generateAuthToken());
-//
-//
-//HashMap<String, Object> userDevice = new HashMap<String, Object>();
-//userDevice.put("uuid", userDeviceUuid);
-//userDevice.put("user_uuid", userUuid);
-//userDevice.put("modify_reason", "log out");
-//
-//try {
-//    RESTResponse ur = this.delete(url, userDevice, headers);
-//} catch (RESTException e) {
-//    throw new UserServiceException(e);
-//}
-//
-//log.info("deleteUserDevice method exit");
-//}
+
 
 // TODO probably another service
-    func createConnection(serverUuid: String, virtualIp: String, deviceIp: String) throws {
-        print("updateUserDevice start")
+    func createConnection(serverUuid: String, virtualIp: String, deviceIp: String) throws -> String {
+        print("createConnection start")
         if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
             throw ErrorsEnum.userAPIServiceSystemError
         }
 
         var response = RESTResponse()
         let headers = prepareHeaders()
+
+        let userUUID = user.getUuid()!
 
         let dateFormatter = DateFormatter()
         let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
@@ -253,31 +232,56 @@ class UserAPIService: RESTService {
         let connected_since = dateFormatter.string(from: Date())
 
         let postJson: [String: Any] = [
-            "server": [
-                "uuid": serverUuid,
-                "type": "ikev2"
-            ],
-            "users":
-            [
-                [
-                    user.getEmail()!: [
-                        "email": user.getEmail()!,
-                        "device_id": user.getUserDevice()!.getId()!,
-                        "device_ip": deviceIp,
-                        "virtual_ip": virtualIp,
-                        "bytes_i": 0,
-                        "bytes_o": 0,
-                        "connected_since": connected_since
-                    ]
-                ]
-            ]
+            "server_uuid": serverUuid,
+            "user_uuid": userUUID,
+            "user_device_uuid": user.getUserDevice()!.getUuid() as Any,
+            "device_id": user.getUserDevice()!.getId()!,
+            "device_ip": deviceIp,
+            "virtual_ip": virtualIp,
+            "bytes_i": 0,
+            "bytes_o": 0,
+            "connected_since": connected_since,
+            "is_connected": true
         ]
 
-        response = post(url: "\(url.replacingOccurrences(of: "users", with: "vpns/servers"))/\(serverUuid)/connections",
+        response = post(url: "\(self.url)/\(userUUID)/servers/\(serverUuid)/connections",
                 headers: headers, body: postJson)
 
         if response.isSuccess {
-            print("updateUserDevice end")
+            self.user.setCurrentConnectionUUID(currentConnectionUUID: (response.header!["Location"]?.split(separator: "/").suffix(1).joined(separator: "/"))!)
+            print("createConnection end")
+            return user.getCurrentConnectionUUID()!
+        } else if (response.statusCode == nil && response.errorMessage != nil) {
+            throw ErrorsEnum.userAPIServiceConnectionProblem
+        } else {
+            print("throw userAPIServiceSystemError")
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
+    }
+
+    // TODO probably another service
+    func updateConnection(connectionUUID: String, serverUuid: String, bytes_i: Int, bytes_o: Int, isConnected: Bool) throws {
+        print("createConnection start")
+        if self.user.getCurrentConnectionUUID() == nil || self.user.getUserDevice()?.getUuid() == nil {
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
+
+        var response = RESTResponse()
+        let headers = prepareHeaders()
+
+        let postJson: [String: Any] = [
+            "server_uuid": serverUuid,
+            "user_device_uuid": self.user.getUserDevice()!.getUuid()!,
+            "bytes_i": bytes_i,
+            "bytes_o": bytes_o,
+            "is_connected": isConnected
+        ]
+
+        response = put(url: "\(self.url)/\(self.user.getUuid()!)/servers/\(serverUuid)/connections/\(self.user.getCurrentConnectionUUID()!)",
+                headers: headers, body: postJson)
+
+        if response.isSuccess {
+            print("createConnection end")
             return
         } else if (response.statusCode == nil && response.errorMessage != nil) {
             throw ErrorsEnum.userAPIServiceConnectionProblem
@@ -285,10 +289,8 @@ class UserAPIService: RESTService {
             print("throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
-
-
-        print("updateUserDevice end")
     }
+
 
 // TODO probably another service
     func getVPNServers() throws -> [Server] {

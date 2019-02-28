@@ -10,7 +10,7 @@ class RESTResponse {
     var statusCode: Int?
     var data: [String: Any]?
     var dataArray: [[String: Any]]?
-    var response: [String: String]?
+    var header: [String: String]?
     var isClientError: Bool?
     var errorMessage: String?
 
@@ -24,7 +24,7 @@ class RESTResponse {
     }
 
     func builder(response: [String: String]) -> RESTResponse {
-        self.response = response
+        self.header = response
         return self
     }
 

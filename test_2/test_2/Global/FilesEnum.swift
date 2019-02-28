@@ -20,6 +20,7 @@ enum FilesEnum: String {
     case userDeviceId = "userDeviceId"
     case deviceToken = "deviceToken"
 
+    case currentConnection = "currentConnection"
 
 
 }

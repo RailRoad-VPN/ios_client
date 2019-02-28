@@ -11,6 +11,7 @@ class User: NSObject, NSCoding {
     private var createdDate: String?
     private var isEnabled: Bool?
     private var userDevice: UserDevice?
+    private var currentConnectionUUID: String?
 
 
     override init() {
@@ -79,11 +80,19 @@ class User: NSObject, NSCoding {
     func getUserDevice() -> UserDevice? {
         return self.userDevice
     }
+    func getCurrentConnectionUUID() -> String? {
+        return self.currentConnectionUUID
+    }
 
     public func setUserDevice(userDevice: UserDevice) {
         print("setUserDevice start")
         self.userDevice = userDevice
         print("setUserDevice end")
+    }
+    public func setCurrentConnectionUUID(currentConnectionUUID: String) {
+        print("setCurrentConnectionUUID start")
+        self.currentConnectionUUID = currentConnectionUUID
+        print("setCurrentConnectionUUID end")
     }
 
     required public init(coder aDecoder: NSCoder) {

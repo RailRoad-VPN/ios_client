@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window = UIWindow(frame: UIScreen.main.bounds)
 
-        CacheMetaService.shared.backgroundUpdateCheckGlobalMeta(once: false)
+//        CacheMetaService.shared.backgroundUpdateCheckGlobalMeta(once: false)
 
         let user = User()
         if user.getUserDevice() == nil || user.getUserDevice()?.getToken() == nil {

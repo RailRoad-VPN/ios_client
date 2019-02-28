@@ -177,9 +177,11 @@ class MainViewController: UIViewController {
     }
 
     @objc func testAPI(_ sender: UIButton) {
-        print("test API pressed")
-        let user = User()
-        print("test API end")
+//        print("test API pressed")
+//        let user = User()
+
+//        print(Date(), self, #function, "test API end", separator: ": ", to: &Log.log)
+        print_f(#file, #function, "test API end")
     }
 
 
@@ -236,7 +238,9 @@ class MainViewController: UIViewController {
             }
             do {
                 try self.userAPIService.updateUserDevice(virtualIp: "1.1.1.1", deviceIp: "111.111.111.111", location: "Nigeria")
-                try self.userAPIService.createConnection(serverUuid: serverUuid!, virtualIp: "1.1.1.1", deviceIp: "111.111.111.111")
+                let connectionUUID = try self.userAPIService.createConnection(serverUuid: serverUuid!, virtualIp: "1.1.1.1", deviceIp: "111.111.111.111")
+                let connection = Connection.init(uuid: connectionUUID, serverUUID: serverUuid!)
+                CacheMetaService.shared.save(any: connection, toFile: FilesEnum.currentConnection.rawValue)
                 self.isWorkerInProgress = false
                 return
             } catch ErrorsEnum.VPNServiceSystemError {
@@ -257,6 +261,16 @@ class MainViewController: UIViewController {
                 return
             }
             self.vpnService.disconnect()
+            let connection = Connection.init()
+            if connection.uuid != nil {
+                do {
+                    try self.userAPIService.updateConnection(connectionUUID: connection.uuid!, serverUuid: connection.serverUUID!, bytes_i: 0, bytes_o: 0, isConnected: false)
+                } catch ErrorsEnum.VPNServiceSystemError {
+                    self.isWorkerInProgress = false
+                } catch {
+                    self.isWorkerInProgress = false
+                }
+            }
             self.isWorkerInProgress = false
         }
 
