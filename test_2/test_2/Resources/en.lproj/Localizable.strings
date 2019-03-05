@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  test_2
+
+  Created by beop on 3/5/19.
+  Copyright © 2019 beop. All rights reserved.
+*/
+
+"welcome" = "Welcome!";
+"enter_a_pin_or_sign_up" = "Enter a pin or Sign Up";
+"loading" = "Loading...";
+"you_entered_wrong_pin" = "You entered wrong pin";
+"VPN" = "VPN";
+"servers" = "Servers";
+"settings" = "Settings";
+"railroad_vpn" = "RailRoad VPN";
+"press_green_semaphore_to_disconnect" = "Press green semaphore to disconnect";
+"press_red_semaphore_to_connect" = "Press red semaphore to connect";
+"load" = "Load";
+"server_number" = "Server #";
+"profile" = "Profile";
+"support" = "Support";
+"faq" = "FAQ";
+"log_out" = "Log out";

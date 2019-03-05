@@ -29,7 +29,7 @@ class MainViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         print_f(#file, #function, "MainController INIT works!!!")
 
-        self.userAPIService = UserAPIService()
+        self.userAPIService = UserAPIService.userService
         self.vpnService = VPNService()
         self.serverList = UIButton()
         self.startStopVPN = UIButton()
@@ -40,7 +40,7 @@ class MainViewController: UIViewController {
     }
 
     required init?(coder: NSCoder) {
-        self.userAPIService = UserAPIService()
+        self.userAPIService = UserAPIService.userService
         self.vpnService = VPNService()
         self.serverList = UIButton()
         self.startStopVPN = UIButton()
@@ -65,7 +65,7 @@ class MainViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.topItem!.title = "RailRoad VPN"
+        self.navigationController?.navigationBar.topItem!.title = NSLocalizedString("railroad_vpn", comment: "RailRoad VPN")
         self.navigationController?.navigationBar.backgroundColor = nil
         self.navigationController?.navigationBar.isTranslucent = true
     }
@@ -130,14 +130,14 @@ class MainViewController: UIViewController {
         var hintComment: NSMutableAttributedString
         if self.vpnService.getIsVPNOn() {
             self.startStopVPN.setImage(UIImage(named: "greenSemaphore"), for: UIControlState.normal)
-            hintComment = NSMutableAttributedString(string: "Press green semaphore to disconnect", attributes:
+            hintComment = NSMutableAttributedString(string: NSLocalizedString("press_green_semaphore_to_disconnect", comment: "Press green semaphore to disconnect"), attributes:
             [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Light", size: 10)!]
             )
             hintComment.addAttribute(.foregroundColor, value: UIColor.white, range: NSRange(location: 0, length: hintComment.length))
             hintComment.addAttribute(.foregroundColor, value: UIColor.green, range: NSRange(location: 6, length: 5))
         } else {
             self.startStopVPN.setImage(UIImage(named: "redSemaphore"), for: UIControlState.normal)
-            hintComment = NSMutableAttributedString(string: "Press red semaphore to connect", attributes:
+            hintComment = NSMutableAttributedString(string: NSLocalizedString("press_red_semaphore_to_connect", comment: ""), attributes:
             [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Light", size: 10)!]
             )
             hintComment.addAttribute(.foregroundColor, value: UIColor.white, range: NSRange(location: 0, length: hintComment.length))

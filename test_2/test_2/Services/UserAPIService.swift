@@ -10,6 +10,12 @@ class UserAPIService: RESTService {
     var user = User()
 
     let url = GlobalSettings.getServiceURL(serviceName: "users")
+    static let userService = UserAPIService()
+
+    override
+    private init(){
+
+    }
 
 
     func receiveUser(pincode: String) throws -> User {

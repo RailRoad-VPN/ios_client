@@ -11,7 +11,7 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
     var tableView: UITableView
     var refreshControl: UIRefreshControl
     var servers: [Server]?
-    let us = UserAPIService()
+    let us = UserAPIService.userService
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 
@@ -61,7 +61,7 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        self.navigationItem.title = ""
-        self.navigationController?.navigationBar.topItem!.title = "Servers"
+        self.navigationController?.navigationBar.topItem!.title = NSLocalizedString("servers", comment: "Servers")
         self.navigationController?.navigationBar.backgroundColor = UIColor.greyRailRoad
         if self.servers == nil {
             self.loadServerList()
@@ -86,9 +86,10 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
         let num = String(serverRow.num ?? 0)
         let country = String(serverRow.country_str_code ?? "hidden country")
         let city = String(serverRow.city_name ?? "hidden city")
+        let loadLabel = NSLocalizedString("load", comment: "Load")
 
-        cell.locationAndLoad.text = country + ", " + city + " / Load: " + load + "%"
-        cell.serverName.text = "Server #" + num
+        cell.locationAndLoad.text = country + ", " + city + " / " + loadLabel + ": " + load + "%"
+        cell.serverName.text = NSLocalizedString("server_number", comment: "Server #") + num
         cell.backgroundColor = UIColor.greyRailRoad
         return cell;
     }

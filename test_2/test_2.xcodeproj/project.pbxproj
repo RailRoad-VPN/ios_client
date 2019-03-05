@@ -28,6 +28,7 @@
 		2E156B0DF17D7E2C2518E09F /* RESTSertviceI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156B352A6E5095C6FC833C /* RESTSertviceI.swift */; };
 		2E156B4DD85EA198ACA29DEF /* VPNService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1565D735C78E2A4CA5B1BE /* VPNService.swift */; };
 		2E156BAC2BC5F626BDEF70C5 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15687806E900770BAF527F /* Server.swift */; };
+		2E156BAF60128D55433C54C3 /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156B92BEE9B0E9972E8482 /* LaunchScreenViewController.swift */; };
 		2E156CD2B5A04263090B0443 /* RailRoadNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15644334A2DEEE236322F8 /* RailRoadNavigationController.swift */; };
 		2E156D8714191473125C3BDE /* RESTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156C3155332AC3B9A74F73 /* RESTService.swift */; };
 		2E156E1505CF7BF6993B502F /* ServersListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156D08F6C3BC33F1469DAD /* ServersListTableViewCell.swift */; };
@@ -41,6 +42,7 @@
 		3E50EFD1209CD4CE007D128D /* test_2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50EFD0209CD4CE007D128D /* test_2Tests.swift */; };
 		3E50EFDC209CD4CE007D128D /* test_2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50EFDB209CD4CE007D128D /* test_2UITests.swift */; };
 		3ED862FB209F758300A9F120 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ED862FA209F758300A9F120 /* NetworkExtension.framework */; };
+		3EED0769222E48F00068DCE3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3EED076B222E48F00068DCE3 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +81,7 @@
 		2E1569E93DE9B17D6A338BE7 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2E156B352A6E5095C6FC833C /* RESTSertviceI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTSertviceI.swift; sourceTree = "<group>"; };
 		2E156B8901B3975F96DBEF80 /* VPNStatesEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPNStatesEnum.swift; sourceTree = "<group>"; };
+		2E156B92BEE9B0E9972E8482 /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		2E156C3155332AC3B9A74F73 /* RESTService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTService.swift; sourceTree = "<group>"; };
 		2E156C809261B33BA616BA4F /* Meta.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meta.swift; sourceTree = "<group>"; };
 		2E156D08F6C3BC33F1469DAD /* ServersListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServersListTableViewCell.swift; sourceTree = "<group>"; };
@@ -102,6 +105,9 @@
 		3E50EFDD209CD4CE007D128D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E7A703620AA3D1C00492E81 /* test_2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = test_2.entitlements; sourceTree = "<group>"; };
 		3ED862FA209F758300A9F120 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		3EED076A222E48F00068DCE3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3EED076C222E492F0068DCE3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3EED076D222E49600068DCE3 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +159,7 @@
 				2E156D08F6C3BC33F1469DAD /* ServersListTableViewCell.swift */,
 				2E156D1CB5FE5F49634F2C87 /* PinTextField.swift */,
 				2E156E3B952815D03396BA74 /* TabViewController.swift */,
+				2E156B92BEE9B0E9972E8482 /* LaunchScreenViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -208,6 +215,7 @@
 		3E50EFBA209CD4CD007D128D /* test_2 */ = {
 			isa = PBXGroup;
 			children = (
+				3EED0766222E48920068DCE3 /* Resources */,
 				3E7A703620AA3D1C00492E81 /* test_2.entitlements */,
 				3E50EFBB209CD4CD007D128D /* AppDelegate.swift */,
 				3E50EFBF209CD4CD007D128D /* Main.storyboard */,
@@ -247,6 +255,14 @@
 				3ED862FA209F758300A9F120 /* NetworkExtension.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3EED0766222E48920068DCE3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3EED076B222E48F00068DCE3 /* Localizable.strings */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -319,7 +335,7 @@
 						CreatedOnToolsVersion = 9.3;
 						SystemCapabilities = {
 							com.apple.Keychain = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -340,6 +356,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 3E50EFAF209CD4CD007D128D;
 			productRefGroup = 3E50EFB9209CD4CD007D128D /* Products */;
@@ -358,6 +375,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EED0769222E48F00068DCE3 /* Localizable.strings in Resources */,
 				3E50EFC6209CD4CD007D128D /* LaunchScreen.storyboard in Resources */,
 				3E50EFC3209CD4CD007D128D /* ImagesAssets.xcassets in Resources */,
 				3E50EFC1209CD4CD007D128D /* Main.storyboard in Resources */,
@@ -413,6 +431,7 @@
 				2E156AC88C1E355CF4006265 /* GlobalSettings.swift in Sources */,
 				2E1565ABF8CB576014FE7725 /* Connection.swift in Sources */,
 				2E156F59F24C8CF18D95CB04 /* Log.swift in Sources */,
+				2E156BAF60128D55433C54C3 /* LaunchScreenViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +483,16 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		3EED076B222E48F00068DCE3 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3EED076A222E48F00068DCE3 /* en */,
+				3EED076C222E492F0068DCE3 /* Base */,
+				3EED076D222E49600068DCE3 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -471,6 +500,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -531,6 +561,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -585,7 +616,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = test_2/test_2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2J7CVRHZ7X;
 				"HEADER_SEARCH_PATHS[arch=*]" = /Users/beop/Desktop/railroad;
@@ -606,7 +636,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = test_2/test_2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2J7CVRHZ7X;
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "";

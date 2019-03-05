@@ -10,7 +10,12 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
 
     var tableView = UITableView.init()
 
-    let settingsItems = ["Profile", "Support", "FAQ", "Log out"]
+    let settingsItems = [
+        NSLocalizedString("profile", comment: "Profile"),
+        NSLocalizedString("support", comment: "Support"),
+        NSLocalizedString("faq", comment: "FAQ"),
+        NSLocalizedString("log_out", comment: "Log out")
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +33,7 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.topItem!.title = "Settings"
+        self.navigationController?.navigationBar.topItem!.title = NSLocalizedString("settings", comment: "Settings")
         self.navigationController?.navigationBar.backgroundColor = UIColor.greyRailRoad
     }
 
@@ -53,7 +58,7 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
             }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else if indexPath.row == 3 {
-            let us = UserAPIService()
+            let us = UserAPIService.userService
             let vpns = VPNService()
             do {
                 try vpns.disconnect()

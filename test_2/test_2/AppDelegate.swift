@@ -26,13 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 //        CacheMetaService.shared.backgroundUpdateCheckGlobalMeta(once: false)
 
-        let user = User()
-        if user.getUserDevice() == nil || user.getUserDevice()?.getToken() == nil {
-            window!.rootViewController = PinViewController()
-        } else {
-            let navigationController = RailRoadNavigationController.init(rootViewController: TabViewController())
-            window!.rootViewController = navigationController
-        }
+        window!.rootViewController = LaunchScreenViewController()
         window!.makeKeyAndVisible()
 
 

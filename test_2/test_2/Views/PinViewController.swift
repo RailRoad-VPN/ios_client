@@ -21,7 +21,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
 
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        userAPIService = UserAPIService()
+        userAPIService = UserAPIService.userService
 
         firstPinNum = PinTextField()
         secondPinNum = PinTextField()
@@ -32,7 +32,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
     }
 
     required init?(coder: NSCoder) {
-        userAPIService = UserAPIService()
+        userAPIService = UserAPIService.userService
 
         firstPinNum = PinTextField()
         secondPinNum = PinTextField()
@@ -78,7 +78,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
 
         welcomeTitle.frame = wTFrame
         welcomeTitle.numberOfLines = 1
-        welcomeTitle.text = "Welcome!"
+        welcomeTitle.text = NSLocalizedString("welcome", comment: "Welcome!")
         welcomeTitle.textAlignment = NSTextAlignment.center
         welcomeTitle.textColor = UIColor.white
         welcomeTitle.font = welcomeTitle.font.withSize(CGFloat(40))
@@ -89,7 +89,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
             .link: NSURL(string: "http://internal.novicorp.com:61884/en/order?pack")!,
             .foregroundColor: UIColor.blue
         ]
-        let attributedString = NSMutableAttributedString(string: "Enter a pin or Sign Up")
+        let attributedString = NSMutableAttributedString(string: NSLocalizedString("enter_a_pin_or_sign_up", comment: "Enter a pin or Sign Up"))
 
         // Set the 'Sign Up' substring to be the link
         attributedString.setAttributes(linkAttributes, range: NSMakeRange(15, 7))
@@ -116,7 +116,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
         coverPinNums.frame = CGRect.init(x: 0, y: pinNumY, width: screenWidth, height: pinNumHeight)
 //        coverPinNums.backgroundColor = UIColor.yellowRailRoad
 
-        actionStatus.text = "LOADING..."
+        actionStatus.text = NSLocalizedString("loading", comment: "Loading...")
         actionStatus.textAlignment = .center
         actionStatus.textColor = .green
 //        actionStatus.backgroundColor = UIColor.brown
@@ -168,7 +168,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
                 thirdPinNum.backgroundColor = UIColor.yellowRailRoad
                 fourthPinNum.backgroundColor = UIColor.yellowRailRoad
                 actionStatus.isHidden = true
-                actionStatus.text = "LOADING..."
+                actionStatus.text = NSLocalizedString("loading", comment: "Loading...")
             default: print_f(#file, #function, "no")
             }
         } else {
@@ -217,7 +217,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
                     let userDevice = try self.userAPIService.createUserDevice()
                     CacheMetaService.shared.save(any: userDevice, toFile: FilesEnum.userDevice.rawValue)
                 } else {
-                    errorMessage = "You entered wrong pin"
+                    errorMessage = NSLocalizedString("you_entered_wrong_pin", comment: "You entered wrong pin")
                 }
             } catch ErrorsEnum.userAPIServiceSystemError {
                 toProceed = false

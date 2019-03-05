@@ -132,7 +132,7 @@ class CacheMetaService: RESTService {
                 if self.isGeneralMetaOld(remoteGeneralMeta: remoteGeneralMeta) {
 
                     do {
-                        let us = UserAPIService()
+                        let us = UserAPIService.userService
                         try self.save(any: us.getVPNServers(), toFile: FilesEnum.vpnServers.rawValue)
                         self.setGeneralMetaCached(remoteGeneralMeta: remoteGeneralMeta)
                         NotificationCenter.default.post(name: .refreshTableView, object: nil)

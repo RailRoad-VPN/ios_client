@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  test_2
+
+  Created by beop on 3/5/19.
+  Copyright © 2019 beop. All rights reserved.
+*/
+
+"welcome" = "Добро пожаловать!";
+"enter_a_pin_or_sign_up" = "Введите пин или зарегистрируйтесь";
+"loading" = "Загрузка...";
+"you_entered_wrong_pin" = "Вы ввели неверный пин";
+"VPN" = "VPN";
+"servers" = "Серверы";
+"settings" = "Настройки";
+"railroad_vpn" = "RailRoad VPN";
+"press_green_semaphore_to_disconnect" = "Нажмите на зелёный семафор, чтобы отключиться";
+"press_red_semaphore_to_connect" = "Нажмите на красный семафор, чтобы подключиться";
+"load" = "Загруженность";
+"server_number" = "Сервер #";
+"profile" = "Профиль";
+"support" = "Поддержка";
+"faq" = "Часто задаваемые вопросы";
+"log_out" = "Выйти из аккаунта";

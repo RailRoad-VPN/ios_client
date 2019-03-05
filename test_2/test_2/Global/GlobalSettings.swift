@@ -10,6 +10,7 @@ class GlobalSettings {
     private static let API_VER = "v1";
     public static let DEVICE_PLATFORM_ID = 3;
     public static let VPN_TYPE_ID = 1;
+    public static let LINK_TO_PROFILE = "https://rroadvpn.net/en/profile"
 
 
     public static func getServiceURL(serviceName: String) -> String {
