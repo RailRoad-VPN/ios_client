@@ -65,7 +65,8 @@ class MainViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.topItem!.title = NSLocalizedString("railroad_vpn", comment: "RailRoad VPN")
+//        self.navigationController?.navigationBar.topItem!.title = NSLocalizedString("railroad_vpn", comment: "RailRoad VPN")
+        self.navigationController?.navigationBar.topItem!.title = nil
         self.navigationController?.navigationBar.backgroundColor = nil
         self.navigationController?.navigationBar.isTranslucent = true
     }
