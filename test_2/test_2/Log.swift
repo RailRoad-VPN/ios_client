@@ -7,7 +7,7 @@ import Foundation
 
 class Log: TextOutputStream {
 
-    static var log: Log = Log()
+    public static var log: Log = Log()
 
     private init() {
     }
@@ -15,6 +15,18 @@ class Log: TextOutputStream {
 
     func write(_ string: String) {
         print(string, terminator: "")
+
+        let log = getPathToLog()
+        if let handle = try? FileHandle(forWritingTo: log) {
+            handle.seekToEndOfFile()
+            handle.write(string.data(using: .utf8)!)
+            handle.closeFile()
+        } else {
+            try? string.data(using: .utf8)?.write(to: log)
+        }
+    }
+
+    func getPathToLog() -> URL {
         let dateFormatter = DateFormatter()
         let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
         dateFormatter.locale = enUSPosixLocale
@@ -25,14 +37,7 @@ class Log: TextOutputStream {
 
         let fm = FileManager.default
         let log = fm.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(logFileName)
-//        print(log)
-        if let handle = try? FileHandle(forWritingTo: log) {
-            handle.seekToEndOfFile()
-            handle.write(string.data(using: .utf8)!)
-            handle.closeFile()
-        } else {
-            try? string.data(using: .utf8)?.write(to: log)
-        }
+        return log
     }
 }
 

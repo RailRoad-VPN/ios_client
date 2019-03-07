@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import Zip
 
 class UserAPIService: RESTService {
 
@@ -331,6 +332,44 @@ class UserAPIService: RESTService {
             print_f(#file, #function, "throw userAPIServiceSystemError")
             throw ErrorsEnum.userAPIServiceSystemError
         }
+    }
+
+    func createTicket(email: String, description: String) throws {
+        print_f(#file, #function, "createTicket enter")
+//        if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
+//            throw ErrorsEnum.userAPIServiceSystemError
+//        }
+//
+//        var response = RESTResponse()
+//        let headers = prepareHeaders()
+//
+//        //First get the nsObject by defining as an optional anyObject
+//        let nsObject: Any? = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
+//        let version = nsObject as? String
+//
+//        let postJson: [String: Any] = [
+//            "contact_email": email,
+//            "description": description,
+//            "extra_info": "todo",
+//            "app_version": version,
+//            "zipfile":"<base64>"
+//        ]
+//
+//        response = put(url: "\(self.url)/\(self.user.getUuid()!)/servers/\(serverUuid)/connections/\(self.user.getCurrentConnectionUUID()!)",
+//                headers: headers, body: postJson)
+//
+//        if response.isSuccess {
+//            print_f(#file, #function, "createConnection end")
+//            return
+//        } else if (response.statusCode == nil && response.errorMessage != nil) {
+//            throw ErrorsEnum.userAPIServiceConnectionProblem
+//        } else {
+//            print_f(#file, #function, "throw userAPIServiceSystemError")
+//            throw ErrorsEnum.userAPIServiceSystemError
+//        }
+
+        print_f(#file, #function, "createTicket exit")
+
     }
 
 
