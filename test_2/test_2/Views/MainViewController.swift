@@ -29,7 +29,7 @@ class MainViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         print_f(#file, #function, "MainController INIT works!!!")
 
-        self.userAPIService = UserAPIService.userService
+        self.userAPIService = UserAPIService.shared
         self.vpnService = VPNService()
         self.serverList = UIButton()
         self.startStopVPN = UIButton()
@@ -40,7 +40,7 @@ class MainViewController: UIViewController {
     }
 
     required init?(coder: NSCoder) {
-        self.userAPIService = UserAPIService.userService
+        self.userAPIService = UserAPIService.shared
         self.vpnService = VPNService()
         self.serverList = UIButton()
         self.startStopVPN = UIButton()
@@ -178,9 +178,12 @@ class MainViewController: UIViewController {
     }
 
     @objc func testAPI(_ sender: UIButton) {
-//        print_f(#file, #function, "test API pressed")
-//        let user = User()
-
+        print_f(#file, #function, "test API pressed")
+        do {
+            try UserAPIService.shared.createTicket(description: "test1")
+        } catch let e{
+            print_f(#file, #function, e.localizedDescription)
+        }
 //        print_f(#file, #function, Date(), self, #function, "test API end", separator: ": ", to: &Log.log)
         print_f(#file, #function,  "test API end")
     }

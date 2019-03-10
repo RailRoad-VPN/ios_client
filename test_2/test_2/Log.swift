@@ -39,6 +39,19 @@ class Log: TextOutputStream {
         let log = fm.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(logFileName)
         return log
     }
+    static func getPathToLog() -> URL {
+        let dateFormatter = DateFormatter()
+        let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.locale = enUSPosixLocale
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        let date = dateFormatter.string(from: Date())
+
+        let logFileName = "log_\(date).log"
+
+        let fm = FileManager.default
+        let log = fm.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(logFileName)
+        return log
+    }
 }
 
 public func print_f(_ items: Any...) {

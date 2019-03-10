@@ -11,6 +11,16 @@ class UtilityService {
         return Data(string.utf8).base64EncodedString()
     }
 
+    public static func codeBase64(filePath: URL) -> String? {
+        do {
+            return try Data(contentsOf: filePath).base64EncodedString()
+        } catch let e {
+            print(e.localizedDescription)
+            return nil
+        }
+
+    }
+
     public static func decodeBase64(string: String) throws -> String {
         if let data = Data(base64Encoded: string) {
             return String(data: data, encoding: .utf8)!

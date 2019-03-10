@@ -11,7 +11,7 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
     var tableView: UITableView
     var refreshControl: UIRefreshControl
     var servers: [Server]?
-    let us = UserAPIService.userService
+    let us = UserAPIService.shared
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 

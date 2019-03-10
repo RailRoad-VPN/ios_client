@@ -21,7 +21,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
 
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        userAPIService = UserAPIService.userService
+        userAPIService = UserAPIService.shared
 
         firstPinNum = PinTextField()
         secondPinNum = PinTextField()
@@ -32,7 +32,7 @@ class PinViewController: UIViewController, UITextViewDelegate, UITextFieldDelega
     }
 
     required init?(coder: NSCoder) {
-        userAPIService = UserAPIService.userService
+        userAPIService = UserAPIService.shared
 
         firstPinNum = PinTextField()
         secondPinNum = PinTextField()

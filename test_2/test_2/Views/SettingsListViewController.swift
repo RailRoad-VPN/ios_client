@@ -58,7 +58,7 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
             }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else if indexPath.row == 3 {
-            let us = UserAPIService.userService
+            let us = UserAPIService.shared
             let vpns = VPNService()
             do {
                 try vpns.disconnect()
@@ -68,6 +68,12 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
             } catch {
 
             }
+        } else if indexPath.row == 1 {
+
+            let vc = PinViewController()
+            vc.modalPresentationStyle = .overCurrentContext
+            vc.modalTransitionStyle = .crossDissolve
+            present(vc, animated: true, completion: nil)
         }
         self.tableView.deselectRow(at: indexPath, animated: true)
     }

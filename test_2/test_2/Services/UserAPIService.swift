@@ -11,10 +11,10 @@ class UserAPIService: RESTService {
     var user = User()
 
     let url = GlobalSettings.getServiceURL(serviceName: "users")
-    static let userService = UserAPIService()
+    static let shared = UserAPIService()
 
     override
-    private init(){
+    private init() {
 
     }
 
@@ -334,42 +334,46 @@ class UserAPIService: RESTService {
         }
     }
 
-    func createTicket(email: String, description: String) throws {
+    func createTicket(description: String) throws {
         print_f(#file, #function, "createTicket enter")
-//        if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
-//            throw ErrorsEnum.userAPIServiceSystemError
-//        }
-//
-//        var response = RESTResponse()
-//        let headers = prepareHeaders()
-//
-//        //First get the nsObject by defining as an optional anyObject
-//        let nsObject: Any? = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
-//        let version = nsObject as? String
-//
-//        let postJson: [String: Any] = [
-//            "contact_email": email,
-//            "description": description,
-//            "extra_info": "todo",
-//            "app_version": version,
-//            "zipfile":"<base64>"
-//        ]
-//
-//        response = put(url: "\(self.url)/\(self.user.getUuid()!)/servers/\(serverUuid)/connections/\(self.user.getCurrentConnectionUUID()!)",
-//                headers: headers, body: postJson)
-//
-//        if response.isSuccess {
-//            print_f(#file, #function, "createConnection end")
-//            return
-//        } else if (response.statusCode == nil && response.errorMessage != nil) {
-//            throw ErrorsEnum.userAPIServiceConnectionProblem
-//        } else {
-//            print_f(#file, #function, "throw userAPIServiceSystemError")
-//            throw ErrorsEnum.userAPIServiceSystemError
-//        }
+        if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
+
+        var response = RESTResponse()
+        let headers = prepareHeaders()
+
+        //First get the nsObject by defining as an optional anyObject
+        let nsObject: Any? = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
+        let version = nsObject as? String
+
+        let pathToRRLog = Log.getPathToLog()
+        let zipFilePath = try Zip.quickZipFiles([pathToRRLog], fileName: "archive") // Zip
+        let base64ZipFile = UtilityService.codeBase64(filePath: zipFilePath)
+
+
+        let postJson: [String: Any] = [
+            "contact_email": user.getEmail(),
+            "description": description,
+            "extra_info": "todo",
+            "app_version": version,
+            "zipfile": base64ZipFile
+        ]
+
+        response = post(url: "\(self.url)/\(self.user.getUuid()!)/tickets",
+                headers: headers, body: postJson)
+
+        if response.isSuccess {
+            print_f(#file, #function, "createTicket end")
+            return
+        } else if (response.statusCode == nil && response.errorMessage != nil) {
+            throw ErrorsEnum.userAPIServiceConnectionProblem
+        } else {
+            print_f(#file, #function, "throw userAPIServiceSystemError")
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
 
         print_f(#file, #function, "createTicket exit")
-
     }
 
 
