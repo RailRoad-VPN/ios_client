@@ -15,6 +15,8 @@ class RailRoadNavigationController: UINavigationController {
     override public init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
         self.navigationBar.topItem!.title = NSLocalizedString("railroad_vpn", comment: "RailRoad VPN")
+        let textAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationBar.titleTextAttributes = textAttributes
         self.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationBar.isTranslucent = true
     }

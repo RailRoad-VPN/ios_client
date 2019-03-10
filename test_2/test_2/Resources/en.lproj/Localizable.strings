@@ -22,3 +22,6 @@
 "support" = "Support";
 "faq" = "FAQ";
 "log_out" = "Log out";
+"cancel" = "Cancel";
+"send" = "Send";
+"describe_your_problem" = "Please, describe your problem. We will answer you at";

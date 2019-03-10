@@ -70,10 +70,10 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
             }
         } else if indexPath.row == 1 {
 
-            let vc = PinViewController()
+            let vc = SupportViewController()
             vc.modalPresentationStyle = .overCurrentContext
-            vc.modalTransitionStyle = .crossDissolve
-            present(vc, animated: true, completion: nil)
+            vc.definesPresentationContext = true
+            self.navigationController?.present(vc, animated: true)
         }
         self.tableView.deselectRow(at: indexPath, animated: true)
     }

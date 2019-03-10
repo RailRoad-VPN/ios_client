@@ -109,7 +109,7 @@ class ServersListViewController: UIViewController, UITableViewDelegate, UITableV
 
     func loadServerList() {
         print_f(#file, #function, "loadServerList() enter")
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async {
 
             self.servers = CacheMetaService.shared.readAny(fromFile: FilesEnum.vpnServers.rawValue) as? [Server]
 
