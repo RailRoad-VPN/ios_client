@@ -25,11 +25,12 @@ class UserDevice: NSObject, NSCoding {
 
     init(headers: [String: String], deviceId: String, dictionary: [String: Any]?) throws {
         print_f(#file, #function, "init userDevice from dictionaries start")
-        if (headers["Location"] != nil && headers["x-device-token"] != nil) {
+        if headers["Location"] != nil {
             self.uuid = headers["Location"]?.split(separator: "/").suffix(1).joined(separator: "/")
+        }
+
+        if headers["x-device-token"] != nil {
             self.token = headers["x-device-token"]
-        } else {
-            throw ErrorsEnum.absentUserDeviceProperty
         }
 
         self.id = deviceId
@@ -37,8 +38,8 @@ class UserDevice: NSObject, NSCoding {
             self.isActive = dictionary!["is_active"] as? Bool
         }
         super.init()
-        print_f(#file, #function, "uuid is: " + self.uuid!)
-        print_f(#file, #function, "token is: " + self.token!)
+        print_f(#file, #function, "uuid is: " + (self.uuid ?? "nil"))
+        print_f(#file, #function, "token is: " + (self.token ?? "nil"))
         print_f(#file, #function, "id is: " + (self.id ?? "nil"))
         print_f(#file, #function, "init userDevice from dictionaries end")
     }

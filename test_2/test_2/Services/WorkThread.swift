@@ -11,6 +11,7 @@ class WorkThread {
     public static let shared = WorkThread()
 
     let queue1 = DispatchQueue(label: "check_user")
+    let queue2 = DispatchQueue(label: "concurrent", attributes: .concurrent)
 
     private init() {
 
@@ -22,36 +23,40 @@ class WorkThread {
             while true {
                 var isUserOk: Bool = true
                 var alertMessage: String?
+                var user: User?
                 do {
-                    try UserAPIService.shared.receiveUser(uuid: UserAPIService.shared.user.getUuid()!)
+                    user = try UserAPIService.shared.receiveUser(uuid: UserAPIService.shared.user.getUuid()!)
                 } catch {
                     print_f(#file, #function, "receiveUser error. I will try next time")
                 }
-                if ((UserAPIService.shared.user.getIsEnabled() ?? false) == false) {
+                if ((user?.getIsEnabled() ?? false) == false) {
                     print_f(#file, #function, "backgroundIskUserValid. user is disabled")
                     isUserOk = false
                     alertMessage = "Your user is disabled"
-                } else if ((UserAPIService.shared.user.getIsExpired() ?? false) == true) {
+                } else if ((user?.getIsExpired() ?? false) == true) {
                     print_f(#file, #function, "backgroundIskUserValid. user is expired")
                     isUserOk = false
                     alertMessage = "Your subscription is expired"
-                } else if ((UserAPIService.shared.user.getIsLocked() ?? false) == true) {
+                } else if ((user?.getIsLocked() ?? false) == true) {
                     print_f(#file, #function, "backgroundIskUserValid. user is locked")
                     isUserOk = false
                     alertMessage = "Your user is locked"
                 }
 
                 var isUserDeviceOk: Bool = true
+                var isUserDeviceDeleted: Bool = false
+                var userDevice: UserDevice?
                 do {
-                    try UserAPIService.shared.receiveUserDeviceByUUID()
+                    userDevice = try UserAPIService.shared.receiveUserDeviceByUUID()
                 } catch ErrorsEnum.userAPIServiceUserDeviceNotFound {
                     isUserDeviceOk = false
+                    isUserDeviceDeleted = true
                     alertMessage = "Your device has been deleted"
                 } catch {
                     print_f(#file, #function, "receiveUserDeviceByUUID error. I will try next time")
                 }
 
-                if (UserAPIService.shared.user.getUserDevice()?.getIsActive() == false) {
+                if (userDevice?.getIsActive() == false) {
                     isUserDeviceOk = false
                     alertMessage = "Your user device has been deactivated"
                 }
@@ -80,15 +85,33 @@ class WorkThread {
                     DispatchQueue.main.async {
 
                         let rootViewController = UIApplication.shared.keyWindow?.rootViewController
-                        let topMostVC: UIViewController? = rootViewController?.presentedViewController
-                        topMostVC!.present(alert, animated: true, completion: nil)
-                        if !isUserDeviceOk {
-                            do {
-                                try CacheMetaService.shared.clearSettings()
-                            } catch {
-                                print_f(#file, #function, "clearSettings() error")
+                        var topMostVC = rootViewController?.presentedViewController
+                        while topMostVC?.presentedViewController != nil {
+                            topMostVC = topMostVC?.presentedViewController
+                        }
+
+                        if topMostVC is PinViewController || topMostVC is UIAlertController {
+                            //do nothing
+                        } else {
+                            if !isUserDeviceOk && isUserDeviceDeleted {
+                                do {
+                                    try CacheMetaService.shared.clearSettings()
+                                } catch {
+                                    print_f(#file, #function, "clearSettings() error")
+                                }
+
+                                let pv = PinViewController()
+                                if topMostVC is UINavigationController {
+                                    let nv = topMostVC as? UINavigationController
+                                    nv!.present(pv, animated: true)
+                                    pv.present(alert, animated: true, completion: nil)
+                                } else {
+                                    topMostVC!.present(pv, animated: true)
+                                    pv.present(alert, animated: true, completion: nil)
+                                }
+                            } else {
+                                topMostVC!.present(alert, animated: true, completion: nil)
                             }
-                            topMostVC!.navigationController!.setViewControllers([PinViewController()], animated: true)
                         }
                     }
 
@@ -103,7 +126,7 @@ class WorkThread {
     }
 
     func disconnectVPN() {
-        self.queue1.async(qos: .userInteractive) {
+        self.queue2.async(qos: .userInteractive) {
             VPNService.shared.disconnect()
             let connection = Connection.init()
             if connection.uuid != nil {

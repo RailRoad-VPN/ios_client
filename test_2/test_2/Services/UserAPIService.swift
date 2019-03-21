@@ -59,7 +59,6 @@ class UserAPIService: RESTService {
             do {
                 let user = try User(dictionary: (response.data)!)
                 print_f(#file, #function, "receiveUser before return")
-                self.user = user
                 return user
             } catch ErrorsEnum.absentUserProperty {
                 print_f(#file, #function, "throw userAPIServiceSystemError")
@@ -146,13 +145,12 @@ class UserAPIService: RESTService {
 
         let headers = prepareHeaders()
 
-        response = get(url: "\(url)/\(userUuid)/userDevices/\(userDeviceUuid)", headers: headers)
+        response = get(url: "\(url)/\(userUuid)/devices/\(userDeviceUuid)", headers: headers)
 
         if response.isSuccess {
             do {
                 let userDevice = try UserDevice(headers: headers, deviceId: user.getUserDevice()!.getId()!, dictionary: response.data!)
                 print_f(#file, #function, "receiveuserDevice before return")
-                self.user.setUserDevice(userDevice: userDevice)
                 return userDevice
             } catch ErrorsEnum.absentUserDeviceProperty {
                 print_f(#file, #function, "throw userDeviceAPIServiceSystemError")
