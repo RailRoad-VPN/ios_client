@@ -59,7 +59,7 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else if indexPath.row == 3 {
             let us = UserAPIService.shared
-            let vpns = VPNService()
+            let vpns = VPNService.shared
             do {
                 try vpns.disconnect()
                 try us.deleteUserDevice()

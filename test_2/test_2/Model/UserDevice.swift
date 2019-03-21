@@ -10,6 +10,7 @@ class UserDevice: NSObject, NSCoding {
     private var token: String?
     private var id: String?
     private var deviceIp: String?
+    private var isActive: Bool?
 
     override init() {
         print_f(#file, #function, "init userDevice from settings start")
@@ -22,7 +23,7 @@ class UserDevice: NSObject, NSCoding {
     }
 
 
-    init(headers: [String: String], deviceId: String) throws {
+    init(headers: [String: String], deviceId: String, dictionary: [String: Any]?) throws {
         print_f(#file, #function, "init userDevice from dictionaries start")
         if (headers["Location"] != nil && headers["x-device-token"] != nil) {
             self.uuid = headers["Location"]?.split(separator: "/").suffix(1).joined(separator: "/")
@@ -32,10 +33,13 @@ class UserDevice: NSObject, NSCoding {
         }
 
         self.id = deviceId
+        if dictionary?["is_active"] != nil {
+            self.isActive = dictionary!["is_active"] as? Bool
+        }
         super.init()
         print_f(#file, #function, "uuid is: " + self.uuid!)
         print_f(#file, #function, "token is: " + self.token!)
-        print_f(#file, #function, "id is: " + (self.id ?? "nil" ))
+        print_f(#file, #function, "id is: " + (self.id ?? "nil"))
         print_f(#file, #function, "init userDevice from dictionaries end")
     }
 
@@ -57,6 +61,10 @@ class UserDevice: NSObject, NSCoding {
 
     func getDeviceIp() -> String? {
         return self.deviceIp
+    }
+
+    func getIsActive() -> Bool? {
+        return self.isActive
     }
 
     required public init(coder aDecoder: NSCoder) {

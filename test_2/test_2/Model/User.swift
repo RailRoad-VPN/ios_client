@@ -10,6 +10,8 @@ class User: NSObject, NSCoding {
     private var email: String?
     private var createdDate: String?
     private var isEnabled: Bool?
+    private var isLocked: Bool?
+    private var isExpired: Bool?
     private var userDevice: UserDevice?
     private var currentConnectionUUID: String?
 
@@ -21,18 +23,16 @@ class User: NSObject, NSCoding {
         self.uuid = user?.uuid
         self.email = user?.email
         self.createdDate = user?.createdDate
-        self.isEnabled = user?.isEnabled
 
         self.userDevice = UserDevice()
         print_f(#file, #function, "init user from settings end")
 
     }
 
-    init(uuid: String, email: String, createdDate: String, isEnabled: Bool) {
+    init(uuid: String, email: String, createdDate: String) {
         self.uuid = uuid
         self.email = email
         self.createdDate = createdDate
-        self.isEnabled = isEnabled
         self.userDevice = UserDevice()
         super.init()
     }
@@ -48,6 +48,8 @@ class User: NSObject, NSCoding {
             self.email = (dictionary["email"] as! String)
             self.createdDate = (dictionary["created_date"] as! String)
             self.isEnabled = (dictionary["enabled"] != nil)
+            self.isLocked = dictionary["is_locked"] as? Bool
+            self.isExpired = dictionary["is_expired"] as? Bool
         } else {
             throw ErrorsEnum.absentUserProperty
         }
@@ -77,11 +79,29 @@ class User: NSObject, NSCoding {
         return self.isEnabled
     }
 
+    func getIsLocked() -> Bool? {
+        return self.isLocked
+    }
+
+    func getIsExpired() -> Bool? {
+        return self.isExpired
+    }
+
     func getUserDevice() -> UserDevice? {
         return self.userDevice
     }
     func getCurrentConnectionUUID() -> String? {
         return self.currentConnectionUUID
+    }
+
+    public func setIsEnabled(isEnabled: Bool){
+        self.isEnabled = isEnabled
+    }
+    public func setIsLocked(isLocked: Bool){
+        self.isLocked = isLocked
+    }
+    public func setIsExpired(isExpired: Bool){
+        self.isExpired = isExpired
     }
 
     public func setUserDevice(userDevice: UserDevice) {
@@ -99,13 +119,11 @@ class User: NSObject, NSCoding {
         self.uuid = aDecoder.decodeObject(forKey: "uuid") as? String
         self.email = aDecoder.decodeObject(forKey: "email") as? String
         self.createdDate = aDecoder.decodeObject(forKey: "createdDate") as? String
-        self.isEnabled = aDecoder.decodeObject(forKey: "isEnabled") as? Bool
     }
 
     func encode(with aCoder: NSCoder) {
         aCoder.encode(uuid, forKey: "uuid")
         aCoder.encode(email, forKey: "email")
         aCoder.encode(createdDate, forKey: "createdDate")
-        aCoder.encode(isEnabled, forKey: "isEnabled")
     }
 }

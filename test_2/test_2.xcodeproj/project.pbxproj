@@ -12,6 +12,7 @@
 		2E1561BBA2A0F5A73B10443D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1569E93DE9B17D6A338BE7 /* MainViewController.swift */; };
 		2E1561F150BD2BD4CF037E10 /* PinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156098BAEE19CD996543CC /* PinViewController.swift */; };
 		2E15622B24AA007943A55A5F /* FilesEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1564C271D962232DD8DAE1 /* FilesEnum.swift */; };
+		2E15623D0A7119D0381686D2 /* WorkThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156D1947F8C22B13379D4A /* WorkThread.swift */; };
 		2E1562F312F50362D1DC8B95 /* CacheMetaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E15671CB845B3CAE1B3E87F /* CacheMetaService.swift */; };
 		2E15635C1C7E307725427C61 /* RESTResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1562BF488E4B8A85E51666 /* RESTResponse.swift */; };
 		2E1564000CBF6053BD5971EA /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E156E3B952815D03396BA74 /* TabViewController.swift */; };
@@ -90,6 +91,7 @@
 		2E156C3155332AC3B9A74F73 /* RESTService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTService.swift; sourceTree = "<group>"; };
 		2E156C809261B33BA616BA4F /* Meta.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meta.swift; sourceTree = "<group>"; };
 		2E156D08F6C3BC33F1469DAD /* ServersListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServersListTableViewCell.swift; sourceTree = "<group>"; };
+		2E156D1947F8C22B13379D4A /* WorkThread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkThread.swift; sourceTree = "<group>"; };
 		2E156D1CB5FE5F49634F2C87 /* PinTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinTextField.swift; sourceTree = "<group>"; };
 		2E156D689B6BAF8F8D632ADC /* GlobalSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalSettings.swift; sourceTree = "<group>"; };
 		2E156E3B952815D03396BA74 /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				2E156001AEB7E1D39D43081E /* UserAPIService.swift */,
 				2E1565D735C78E2A4CA5B1BE /* VPNService.swift */,
 				2E15671CB845B3CAE1B3E87F /* CacheMetaService.swift */,
+				2E156D1947F8C22B13379D4A /* WorkThread.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -547,6 +550,7 @@
 				2E156F59F24C8CF18D95CB04 /* Log.swift in Sources */,
 				2E156BAF60128D55433C54C3 /* LaunchScreenViewController.swift in Sources */,
 				2E156EC481D72C9D1E75EA6E /* SupportViewController.swift in Sources */,
+				2E15623D0A7119D0381686D2 /* WorkThread.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,10 +7,12 @@ import Foundation
 
 class VPNService {
 
+    public static let shared = VPNService()
+
     private var isVPNOn: Bool
     private var VPNStatus: VPNStatesEnum
 
-    init() {
+    private init() {
 // todo check if vpn is active
         print_f(#file, #function, "VPNService init enter")
         self.isVPNOn = false

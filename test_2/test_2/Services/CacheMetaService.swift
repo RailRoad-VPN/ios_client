@@ -117,16 +117,16 @@ class CacheMetaService: RESTService {
 
 
     func backgroundUpdateCheckGlobalMeta(once: Bool = false) {
-        print_f(#file, #function, "background self.updateRequestVPNServers init")
+        print_f(#file, #function, "backgroundUpdateCheckGlobalMeta")
         DispatchQueue.global(qos: .background).async {
 
             while true {
-                print_f(#file, #function, "background self.updateRequestVPNServers enter")
+                print_f(#file, #function, "backgroundUpdateCheckGlobalMeta enter")
                 var remoteGeneralMeta = Meta(version: 0, condition: 0)
                 do {
                     remoteGeneralMeta = try self.getGeneralMeta()
                 } catch {
-                    print_f(#file, #function, "background updateRequestVPNServers error, i will try next time")
+                    print_f(#file, #function, "backgroundUpdateCheckGlobalMeta error, i will try next time")
                 }
 
                 if self.isGeneralMetaOld(remoteGeneralMeta: remoteGeneralMeta) {
@@ -136,12 +136,12 @@ class CacheMetaService: RESTService {
                         try self.save(any: us.getVPNServers(), toFile: FilesEnum.vpnServers.rawValue)
                         self.setGeneralMetaCached(remoteGeneralMeta: remoteGeneralMeta)
                         NotificationCenter.default.post(name: .refreshTableView, object: nil)
-                        print_f(#file, #function, "background self.updateRequestVPNServers exit. Meta is old")
+                        print_f(#file, #function, "backgroundUpdateCheckGlobalMeta exit. Meta is old")
                     } catch {
-                        print_f(#file, #function, "background updateRequestVPNServers error, i will try next time")
+                        print_f(#file, #function, "backgroundUpdateCheckGlobalMeta error, i will try next time")
                     }
                 } else {
-                    print_f(#file, #function, "background self.updateRequestVPNServers exit. Meta is up to date")
+                    print_f(#file, #function, "backgroundUpdateCheckGlobalMeta exit. Meta is up to date")
                 }
                 if (once) {
                     return

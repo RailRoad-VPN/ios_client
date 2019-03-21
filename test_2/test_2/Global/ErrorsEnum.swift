@@ -19,6 +19,7 @@ enum ErrorsEnum: Error {
     case userAPIServiceSystemError
     case userAPIServiceApplicationError
     case userAPIServiceConnectionProblem
+    case userAPIServiceUserDeviceNotFound
 
     case metaCacheServiceConnectionProblem
     case metaCacheServiceSystemError

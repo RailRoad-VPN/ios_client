@@ -10,7 +10,6 @@ import UIKit
 import NetworkExtension
 
 class MainViewController: UIViewController {
-
     var isWorkerInProgress: Bool = false
 
     var userAPIService: UserAPIService
@@ -30,7 +29,7 @@ class MainViewController: UIViewController {
         print_f(#file, #function, "MainController INIT works!!!")
 
         self.userAPIService = UserAPIService.shared
-        self.vpnService = VPNService()
+        self.vpnService = VPNService.shared
         self.serverList = UIButton()
         self.startStopVPN = UIButton()
         self.hintCommentLabel = UILabel()
@@ -41,7 +40,7 @@ class MainViewController: UIViewController {
 
     required init?(coder: NSCoder) {
         self.userAPIService = UserAPIService.shared
-        self.vpnService = VPNService()
+        self.vpnService = VPNService.shared
         self.serverList = UIButton()
         self.startStopVPN = UIButton()
         self.hintCommentLabel = UILabel()
@@ -50,6 +49,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        WorkThread.shared.backgroundIskUserValid(once: false)
 
 //background picture
         self.view.backgroundColor = UIColor.greyRailRoad
@@ -181,11 +181,11 @@ class MainViewController: UIViewController {
         print_f(#file, #function, "test API pressed")
         do {
             try UserAPIService.shared.createTicket(description: "test1")
-        } catch let e{
+        } catch let e {
             print_f(#file, #function, e.localizedDescription)
         }
 //        print_f(#file, #function, Date(), self, #function, "test API end", separator: ": ", to: &Log.log)
-        print_f(#file, #function,  "test API end")
+        print_f(#file, #function, "test API end")
     }
 
 
@@ -277,6 +277,5 @@ class MainViewController: UIViewController {
             }
             self.isWorkerInProgress = false
         }
-
     }
 }

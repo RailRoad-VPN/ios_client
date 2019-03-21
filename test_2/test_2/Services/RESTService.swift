@@ -54,7 +54,7 @@ class RESTService: RESTServiceI {
         print_f(#file, #function, "RESTService post method with URL: " + url + " and headers: ")
         print_f(#file, #function, headers)
         print_f(#file, #function, "and body: ")
-        print_f(#file, #function, body)
+//        print_f(#file, #function, body)
 
         var returnRESTResponse = RESTResponse()
 

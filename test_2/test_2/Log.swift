@@ -39,6 +39,7 @@ class Log: TextOutputStream {
         let log = fm.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(logFileName)
         return log
     }
+
     static func getPathToLog() -> URL {
         let dateFormatter = DateFormatter()
         let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
@@ -54,6 +55,7 @@ class Log: TextOutputStream {
     }
 }
 
-public func print_f(_ items: Any...) {
-    print(Date(), items, separator: ": ", to: &Log.log)
+public func print_f(_ file: String, _ items: Any...) {
+    var splittedFile = file.split(separator: "/").suffix(1).joined(separator: "/")
+    print(Date(), splittedFile, items, separator: ": ", to: &Log.log)
 }

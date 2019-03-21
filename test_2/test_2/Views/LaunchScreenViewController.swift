@@ -49,7 +49,7 @@ class LaunchScreenViewController: UIViewController {
                 }
             }
             DispatchQueue.main.async {
-                let user = User()
+                let user = UserAPIService.shared.user
                 if user.getUserDevice() == nil || user.getUserDevice()?.getToken() == nil {
                     self.present(PinViewController(), animated: true)
                 } else {

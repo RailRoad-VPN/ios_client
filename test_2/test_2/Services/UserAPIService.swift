@@ -7,11 +7,11 @@ import Foundation
 import Zip
 
 class UserAPIService: RESTService {
-
+    static let shared = UserAPIService()
     var user = User()
 
     let url = GlobalSettings.getServiceURL(serviceName: "users")
-    static let shared = UserAPIService()
+
 
     override
     private init() {
@@ -26,6 +26,34 @@ class UserAPIService: RESTService {
         let headers = prepareHeaders()
 
         response = get(url: url + "/pincode/" + pincode, headers: headers)
+
+        if response.isSuccess {
+            do {
+                let user = try User(dictionary: (response.data)!)
+                print_f(#file, #function, "receiveUser before return")
+                self.user = user
+                return user
+            } catch ErrorsEnum.absentUserProperty {
+                print_f(#file, #function, "throw userAPIServiceSystemError")
+                throw ErrorsEnum.userAPIServiceSystemError
+            }
+        } else if response.isClientError == true && response.statusCode! < 500 {
+            print_f(#file, #function, "throw userAPIServiceWrongPin")
+            throw ErrorsEnum.userAPIServiceWrongPin
+        } else if (response.statusCode == nil && response.errorMessage != nil) {
+            throw ErrorsEnum.userAPIServiceConnectionProblem
+        } else {
+            print_f(#file, #function, "throw userAPIServiceSystemError")
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
+    }
+
+    func receiveUser(uuid: String) throws -> User {
+        let response: RESTResponse
+
+        let headers = prepareHeaders()
+
+        response = get(url: url + "/uuid/" + uuid, headers: headers)
 
         if response.isSuccess {
             do {
@@ -106,6 +134,43 @@ class UserAPIService: RESTService {
         }
     }
 
+    func receiveUserDeviceByUUID() throws -> UserDevice {
+        print_f(#file, #function, "receiveuserDevice start")
+        if user.getUuid() == nil || user.getUserDevice()?.getUuid() == nil {
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
+
+        let userUuid = user.getUuid()!
+        let userDeviceUuid = user.getUserDevice()!.getUuid()!
+        let response: RESTResponse
+
+        let headers = prepareHeaders()
+
+        response = get(url: "\(url)/\(userUuid)/userDevices/\(userDeviceUuid)", headers: headers)
+
+        if response.isSuccess {
+            do {
+                let userDevice = try UserDevice(headers: headers, deviceId: user.getUserDevice()!.getId()!, dictionary: response.data!)
+                print_f(#file, #function, "receiveuserDevice before return")
+                self.user.setUserDevice(userDevice: userDevice)
+                return userDevice
+            } catch ErrorsEnum.absentUserDeviceProperty {
+                print_f(#file, #function, "throw userDeviceAPIServiceSystemError")
+                throw ErrorsEnum.userAPIServiceSystemError
+            }
+        } else if response.isClientError == true && response.statusCode! == 404 {
+            print_f(#file, #function, "throw userDeviceAPIServiceUserDeviceNotFound")
+            throw ErrorsEnum.userAPIServiceUserDeviceNotFound
+        } else if response.isClientError == true && response.statusCode! < 500 {
+            throw ErrorsEnum.userAPIServiceApplicationError
+        } else if (response.statusCode == nil && response.errorMessage != nil) {
+            throw ErrorsEnum.userAPIServiceConnectionProblem
+        } else {
+            print_f(#file, #function, "throw userDeviceAPIServiceSystemError")
+            throw ErrorsEnum.userAPIServiceSystemError
+        }
+    }
+
     func createUserDevice() throws -> UserDevice {
         print_f(#file, #function, "createUserDevice start")
         if user.getUuid() == nil {
@@ -133,7 +198,7 @@ class UserAPIService: RESTService {
 
         if response.isSuccess {
             do {
-                let userDevice = try UserDevice(headers: response.header!, deviceId: deviceId)
+                let userDevice = try UserDevice(headers: response.header!, deviceId: deviceId, dictionary: nil)
                 self.user.setUserDevice(userDevice: userDevice)
                 print_f(#file, #function, "createUserDevice end")
                 return userDevice
@@ -349,10 +414,11 @@ class UserAPIService: RESTService {
 
         let pathToRRLog = Log.getPathToLog()
         let zipFilePath = try Zip.quickZipFiles([pathToRRLog], fileName: "archive") // Zip
+        print_f(#file, #function, "zipFilePath is: ", zipFilePath)
         let base64ZipFile = UtilityService.codeBase64(filePath: zipFilePath)
 
-
         let postJson: [String: Any] = [
+            "user_uuid": self.user.getUuid()!,
             "contact_email": user.getEmail(),
             "description": description,
             "extra_info": "todo",
@@ -360,7 +426,8 @@ class UserAPIService: RESTService {
             "zipfile": base64ZipFile
         ]
 
-        response = post(url: "\(self.url)/\(self.user.getUuid()!)/tickets",
+
+        response = post(url: "\(self.url)/tickets",
                 headers: headers, body: postJson)
 
         if response.isSuccess {

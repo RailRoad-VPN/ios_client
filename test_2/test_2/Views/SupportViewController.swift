@@ -70,7 +70,6 @@ class SupportViewController: UIViewController, UINavigationControllerDelegate {
     private func sendLetter() {
 
         DispatchQueue.global(qos: .userInitiated).async {
-            DispatchSemaphore.init(value: 0).wait(timeout: .now() + 5)
             do {
                 try UserAPIService.shared.createTicket(description: self.textInputView.text)
                 DispatchQueue.main.async {
