@@ -61,7 +61,9 @@ class SettingsListViewController: UIViewController, UITableViewDelegate, UITable
             let us = UserAPIService.shared
             let vpns = VPNService.shared
             do {
-                try vpns.disconnect()
+                if vpns.getIsVPNOn() {
+                    vpns.disconnect()
+                }
                 try us.deleteUserDevice()
                 try CacheMetaService.shared.clearSettings()
                 self.navigationController!.setViewControllers([PinViewController()], animated: true)

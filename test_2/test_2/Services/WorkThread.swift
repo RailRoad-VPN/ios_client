@@ -6,6 +6,13 @@
 import Foundation
 import UIKit
 
+extension Notification.Name {
+    static let refreshTableView = Notification.Name("refreshTableView")
+    static let VPNServiceWorkInProgress = Notification.Name("VPNWorkIsInProgress")
+    static let VPNConnected = Notification.Name("VPNConnected")
+    static let VPNDisconnected = Notification.Name("VPNDisconnected")
+}
+
 class WorkThread {
 
     public static let shared = WorkThread()
@@ -32,13 +39,16 @@ class WorkThread {
                 if ((user?.getIsEnabled() ?? false) == false) {
                     print_f(#file, #function, "backgroundIskUserValid. user is disabled")
                     isUserOk = false
+                    UserAPIService.shared.user.setIsEnabled(isEnabled: false)
                     alertMessage = "Your user is disabled"
                 } else if ((user?.getIsExpired() ?? false) == true) {
                     print_f(#file, #function, "backgroundIskUserValid. user is expired")
                     isUserOk = false
+                    UserAPIService.shared.user.setIsExpired(isExpired: true)
                     alertMessage = "Your subscription is expired"
                 } else if ((user?.getIsLocked() ?? false) == true) {
                     print_f(#file, #function, "backgroundIskUserValid. user is locked")
+                    UserAPIService.shared.user.setIsLocked(isLocked: true)
                     isUserOk = false
                     alertMessage = "Your user is locked"
                 }
@@ -58,6 +68,7 @@ class WorkThread {
 
                 if (userDevice?.getIsActive() == false) {
                     isUserDeviceOk = false
+                    UserAPIService.shared.user.getUserDevice()?.setIsActive(isActive: false)
                     alertMessage = "Your user device has been deactivated"
                 }
 
@@ -80,7 +91,9 @@ class WorkThread {
                         }
                     }))
 
-                    self.disconnectVPN()
+                    if VPNService.shared.getIsVPNOn() {
+                        self.disconnectVPN()
+                    }
 
                     DispatchQueue.main.async {
 
@@ -120,7 +133,7 @@ class WorkThread {
                 if (once) {
                     return
                 }
-                DispatchSemaphore(value: 0).wait(timeout: DispatchTime.now() + 5.0)
+                DispatchSemaphore(value: 0).wait(timeout: DispatchTime.now() + 15.0)
             }
         }
     }

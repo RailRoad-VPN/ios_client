@@ -60,6 +60,9 @@ class MainViewController: UIViewController {
         self.view.addSubview(imageView)
         self.view.sendSubview(toBack: imageView)
 
+        NotificationCenter.default.addObserver(self, selector: #selector(self.refreshImageButton(_:)), name: .VPNConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.refreshImageButton(_:)), name: .VPNDisconnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.startSemaphoreAnimation(_:)), name: .VPNServiceWorkInProgress, object: nil)
         self.loadButtons()
     }
 
@@ -149,10 +152,7 @@ class MainViewController: UIViewController {
 
     @objc func connectToVPN(_ sender: UIButton) {
         print_f(#file, #function, "vpn butt")
-        startStopVPN.imageView!.animationImages = [UIImage(named: "yellowLeftSemaphore")!, UIImage(named: "yellowRightSemaphore")!]
-        startStopVPN.imageView!.animationDuration = 1
-        startStopVPN.imageView!.startAnimating()
-
+        self.startSemaphoreAnimation(self)
         initAsyncWorks()
 
         if vpnService.getVPNStatus() == VPNStatesEnum.ON && isWorkerInProgress == false {
@@ -171,10 +171,20 @@ class MainViewController: UIViewController {
 
         group.notify(queue: DispatchQueue.main) {
             print_f(#file, #function, "asyncDisconnectDispatchGroup notify enter")
-            self.startStopVPN.imageView!.stopAnimating()
-            self.setButtonAndHintColor()
+            self.refreshImageButton(self)
             print_f(#file, #function, "asyncDisconnectDispatchGroup notify exit")
         }
+    }
+
+    @objc func refreshImageButton(_ sender: Any) {
+        self.startStopVPN.imageView!.stopAnimating()
+        self.setButtonAndHintColor()
+    }
+
+    @objc func startSemaphoreAnimation(_ sender: Any) {
+        self.startStopVPN.imageView!.animationImages = [UIImage(named: "yellowLeftSemaphore")!, UIImage(named: "yellowRightSemaphore")!]
+        self.startStopVPN.imageView!.animationDuration = 1
+        self.startStopVPN.imageView!.startAnimating()
     }
 
     @objc func testAPI(_ sender: UIButton) {
@@ -192,6 +202,13 @@ class MainViewController: UIViewController {
     func initAsyncWorks() {
 // TODO refactor this
         self.connnectWorkItem = DispatchWorkItem(qos: .userInitiated, flags: .enforceQoS) {
+            if (UserAPIService.shared.user.getIsLocked() == true
+                    || UserAPIService.shared.user.getIsExpired() == true
+                    || UserAPIService.shared.user.getIsEnabled() == false
+                    || UserAPIService.shared.user.getUserDevice()?.getIsActive() == false) {
+                WorkThread.shared.backgroundIskUserValid(once: true)
+                return
+            }
 
             let serverUuid: String?
             var config = ""
@@ -277,5 +294,7 @@ class MainViewController: UIViewController {
             }
             self.isWorkerInProgress = false
         }
+
+
     }
 }

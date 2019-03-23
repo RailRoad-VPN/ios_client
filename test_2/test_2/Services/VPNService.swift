@@ -53,7 +53,9 @@ class VPNService {
     func connect(config: String) {
         print_f(#file, #function, "VPNService connect enter")
         print_f(#file, #function, "connecting...")
+        NotificationCenter.default.post(name: .VPNServiceWorkInProgress, object: nil)
         DispatchSemaphore.init(value: 0).wait(timeout: .now() + 3)
+        NotificationCenter.default.post(name: Notification.Name.VPNConnected, object: nil)
         self.isVPNOn = true
         self.VPNStatus = VPNStatesEnum.ON
         print_f(#file, #function, "VPNService connect exit")
@@ -62,9 +64,11 @@ class VPNService {
     func disconnect() {
         print_f(#file, #function, "VPNService disconnect enter")
         print_f(#file, #function, "disconnecting...")
+        NotificationCenter.default.post(name: Notification.Name.VPNServiceWorkInProgress, object: nil)
         DispatchSemaphore.init(value: 0).wait(timeout: .now() + 3)
         self.isVPNOn = false
         self.VPNStatus = VPNStatesEnum.OFF
+        NotificationCenter.default.post(name: Notification.Name.VPNDisconnected, object: nil)
         print_f(#file, #function, "VPNService disconnect exit")
     }
 

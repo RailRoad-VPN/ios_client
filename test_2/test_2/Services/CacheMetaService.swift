@@ -5,10 +5,6 @@
 
 import Foundation
 
-extension Notification.Name {
-    static let refreshTableView = Notification.Name("refreshTableView")
-}
-
 class CacheMetaService: RESTService {
 
     static let shared = CacheMetaService()

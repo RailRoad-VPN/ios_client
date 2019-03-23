@@ -48,6 +48,10 @@ class UserDevice: NSObject, NSCoding {
         self.deviceIp = deviceIp
     }
 
+    func setIsActive(isActive: Bool) {
+        self.isActive = isActive
+    }
+
     func getUuid() -> String? {
         return self.uuid
     }
