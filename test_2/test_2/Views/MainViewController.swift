@@ -49,7 +49,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        WorkThread.shared.backgroundIskUserValid(once: false)
+        WorkThread.shared.eternalCheckUserValid()
 
 //background picture
         self.view.backgroundColor = UIColor.greyRailRoad
@@ -132,7 +132,7 @@ class MainViewController: UIViewController {
 
     private func setButtonAndHintColor() {
         var hintComment: NSMutableAttributedString
-        if self.vpnService.getIsVPNOn() {
+        if VPNService.shared.getIsVPNOn() {
             self.startStopVPN.setImage(UIImage(named: "greenSemaphore"), for: UIControlState.normal)
             hintComment = NSMutableAttributedString(string: NSLocalizedString("press_green_semaphore_to_disconnect", comment: "Press green semaphore to disconnect"), attributes:
             [NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-Light", size: 10)!]
@@ -177,14 +177,18 @@ class MainViewController: UIViewController {
     }
 
     @objc func refreshImageButton(_ sender: Any) {
+        print_f(#file, #function, "refreshImageButton start. Broadcast or not")
         self.startStopVPN.imageView!.stopAnimating()
         self.setButtonAndHintColor()
+        print_f(#file, #function, "refreshImageButton end")
     }
 
     @objc func startSemaphoreAnimation(_ sender: Any) {
+        print_f(#file, #function, "startSemaphoreAnimation start. Broadcast or not")
         self.startStopVPN.imageView!.animationImages = [UIImage(named: "yellowLeftSemaphore")!, UIImage(named: "yellowRightSemaphore")!]
         self.startStopVPN.imageView!.animationDuration = 1
         self.startStopVPN.imageView!.startAnimating()
+        print_f(#file, #function, "startSemaphoreAnimation end")
     }
 
     @objc func testAPI(_ sender: UIButton) {
@@ -206,8 +210,16 @@ class MainViewController: UIViewController {
                     || UserAPIService.shared.user.getIsExpired() == true
                     || UserAPIService.shared.user.getIsEnabled() == false
                     || UserAPIService.shared.user.getUserDevice()?.getIsActive() == false) {
-                WorkThread.shared.backgroundIskUserValid(once: true)
-                return
+                WorkThread.shared.backgroundIskUserValid()
+                if (UserAPIService.shared.user.getIsLocked() == true
+                        || UserAPIService.shared.user.getIsExpired() == true
+                        || UserAPIService.shared.user.getIsEnabled() == false
+                        || UserAPIService.shared.user.getUserDevice()?.getIsActive() == false) {
+                    print_f(#file, #function, "checking user before connect. User is not okay")
+                    self.isWorkerInProgress = false
+                    return
+                }
+
             }
 
             let serverUuid: String?
